@@ -4,6 +4,7 @@
 Необходимые компоненты
 -------------
 [Задание](https://park.mail.ru/blog/view/4/)
+[Чек-лист](https://docs.google.com/spreadsheets/d/1E2wA4Ew0h8apS7aZ_IDom6-4onpZ2EQ-c95Syl3ULh0/edit#gid=638182835)
 ```sh
 pip install -U selenium
 
