@@ -3,7 +3,7 @@
 
 Необходимые компоненты
 -------------
-![Задание](https://park.mail.ru/blog/view/4/)
+[Задание](https://park.mail.ru/blog/view/4/)
 ```sh
 pip install -U selenium
 
