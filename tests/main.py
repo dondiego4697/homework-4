@@ -6,6 +6,8 @@ import unittest
 from selenium.webdriver import DesiredCapabilities, Remote
 from tests.AuthPage.AuthPage import AuthPage
 from tests.GroupListPage.GroupListPage import GroupListPage
+from tests.ProfilePage.ProfilePage import ProfilePage
+from tests.TapePage.TapePage import TapePage
 
 
 class Tests(unittest.TestCase):
@@ -20,13 +22,10 @@ class Tests(unittest.TestCase):
 			desired_capabilities=getattr(DesiredCapabilities, browser).copy()
 		)
 
+		self.authentication()
+
 	def tearDown(self):
 		self.driver.quit()
-
-	def test(self):
-		self.authentication()
-		self.checkAbilityToComplainOnGroupPost()
-		return
 
 	def authentication(self):
 		auth_page = AuthPage(self.driver)
@@ -37,13 +36,17 @@ class Tests(unittest.TestCase):
 		auth_form.set_password(self.PASSWORD)
 		auth_form.submit()
 
-	# Проверить возможность пожаловаться на пост в группе
-	def checkAbilityToComplainOnGroupPost(self):
-		group_page = GroupListPage(self.driver)
-		group_page.init_path()
-		group_page.open()
+	# denstep Проверить возможность пожаловаться на пост в группе
+	# def test_ability_to_complain_on_group_post(self):
+	# 	tape_page = TapePage(self.driver)
+	# 	tape_page.open()
+	# 	post_form = tape_page.open_first_post()
+	# 	self.assertTrue(post_form.create_complain())
 
-		group = group_page.open_first_group()
-		post_form = group.open_first_post()
-		self.assertTrue(post_form.create_complain())
-		return
+	# denstep Проверить загрузку новых постов при скролле вниз
+	def test_check_ability_to_upload_new_post_by_scroll(self):
+		tape_page = TapePage(self.driver)
+		tape_page.open()
+
+
+
