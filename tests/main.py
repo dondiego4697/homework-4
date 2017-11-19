@@ -4,12 +4,13 @@ import os
 
 import unittest
 from selenium.webdriver import DesiredCapabilities, Remote
+from tests.AuthPage.AuthPage import AuthPage
+from tests.GroupListPage.GroupListPage import GroupListPage
 
 
 class Tests(unittest.TestCase):
-	USERNAME = u'USERNAME'
-	USEREMAIL = u'MAIL'
-	PASSWORD = u'qwe'  # os.environ['PASSWORD']
+	USERNAME = u'technopark19'
+	PASSWORD = u'qweasdzxc123'
 
 	def setUp(self):
 		browser = os.environ.get('BROWSER', 'FIREFOX')
@@ -23,8 +24,26 @@ class Tests(unittest.TestCase):
 		self.driver.quit()
 
 	def test(self):
-		# url = urlparse.urljoin('http://tech-mail.ru/', '')
-		# self.driver.get(url)
-		# self.driver.maximize_window()
-		# TODO здесь запускаются тесты
+		self.authentication()
+		self.checkAbilityToComplainOnGroupPost()
+		return
+
+	def authentication(self):
+		auth_page = AuthPage(self.driver)
+		auth_page.open()
+
+		auth_form = auth_page.form
+		auth_form.set_login(self.USERNAME)
+		auth_form.set_password(self.PASSWORD)
+		auth_form.submit()
+
+	# Проверить возможность пожаловаться на пост в группе
+	def checkAbilityToComplainOnGroupPost(self):
+		group_page = GroupListPage(self.driver)
+		group_page.init_path()
+		group_page.open()
+
+		group = group_page.open_first_group()
+		post_form = group.open_first_post()
+		self.assertTrue(post_form.create_complain())
 		return

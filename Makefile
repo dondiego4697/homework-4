@@ -1,5 +1,5 @@
 set-env:
-	export BROWSER_DRIVERS=$(PWD)/drivers
+	export BROWSER_DRIVERS=$(PWD)/drivers && export LOGIN=$LOGIN && export PASS=$PASS
 
 set-chrome:
 	make set-env && export BROWSER=CHROME
