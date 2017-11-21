@@ -14,8 +14,9 @@ pip install -U selenium
 -------------
 Выполняем команды
 ```sh
+make set-os-<имя операционой системы (linux | macos | win)>
 make set-env
-python test-area.py
+python test_area.py
 
 ```
 
