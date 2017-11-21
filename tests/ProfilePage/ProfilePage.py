@@ -3,4 +3,4 @@ from tests.Page.Page import Page
 
 
 class ProfilePage(Page):
-	PATH = ''
+    PATH = ''
