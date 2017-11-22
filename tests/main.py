@@ -3,13 +3,10 @@
 import os
 
 import unittest
-import time
 from selenium.webdriver import DesiredCapabilities, Remote
 from tests.AuthPage.AuthPage import AuthPage
 from tests.PostPage.PostPage import PostPage
-from tests.GroupListPage.GroupListPage import GroupListPage
-from tests.ProfilePage.ProfilePage import ProfilePage
-from tests.TapePage.TapePage import TapePage
+from tests.MainPage.MainPage import MainPage
 
 
 class Tests(unittest.TestCase):
@@ -39,27 +36,40 @@ class Tests(unittest.TestCase):
         auth_form.set_password(self.PASSWORD)
         auth_form.submit()
 
-    # def test_post_to_status(self):
-    #     post_page = PostPage(self.driver)
-    #     post_page.open()
-    #     post_form = post_page.get_post_form()
-    #     post_form.input_post_text("Hello")
-    #     post_form.set_to_status(True)
-    #     post_form.share()
-    #
-    # def test_post_not_to_status(self):
-    #     post_page = PostPage(self.driver)
-    #     post_page.open()
-    #     post_form = post_page.get_post_form()
-    #     post_form.input_post_text("Hello")
-    #     post_form.set_to_status(False)
-    #     post_form.share()
-
-    def test_profile_page_navigation(self):
+    def test_post_to_status(self):
+        # добавить проверку, что этот статус уже не стоит
+        post_msg = "Hello"
         post_page = PostPage(self.driver)
         post_page.open()
-        profile_page = post_page.get_profile_page()
+        post_form = post_page.get_post_form()
+        post_form.input_post_text(post_msg)
+        post_form.set_to_status(True)
+        post_form.share()
+
+        main_page = MainPage(self.driver)
+        main_page.open()
+        profile_page = main_page.get_profile_page()
         profile_page.open()
+        status = profile_page.get_status()
+        status_string = status.get_status_string()
+        self.assertEqual(post_msg, status_string)
+
+    def test_post_not_to_status(self):
+        post_msg = "Not to status"
+        post_page = PostPage(self.driver)
+        post_page.open()
+        post_form = post_page.get_post_form()
+        post_form.input_post_text(post_msg)
+        post_form.set_to_status(False)
+        post_form.share()
+
+        main_page = MainPage(self.driver)
+        main_page.open()
+        profile_page = main_page.get_profile_page()
+        profile_page.open()
+        status = profile_page.get_status()
+        status_string = status.get_status_string()
+        self.assertNotEqual(post_msg, status_string)
 
     # denstep Проверить возможность пожаловаться на пост в группе
     # def test_ability_to_complain_on_group_post(self):
