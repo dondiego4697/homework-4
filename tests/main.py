@@ -96,7 +96,7 @@ class Tests(unittest.TestCase):
     #     post.delete()
     #     self.assertTrue(post.is_deleted())
     #
-    # def test_post_empty_poll(self):
+    # def test_post_poll_no_answer(self):
     #     post_page = PostPage(self.driver)
     #     post_page.open()
     #     post_form = post_page.get_post_form()
@@ -104,6 +104,24 @@ class Tests(unittest.TestCase):
     #     poll_view.write_question("question")
     #     self.assertRaises(WebDriverException, post_form.share)
     #
+    # def test_post_poll_one_answer(self):
+    #     post_page = PostPage(self.driver)
+    #     post_page.open()
+    #     post_form = post_page.get_post_form()
+    #     poll_view = post_form.open_poll_creation()
+    #     poll_view.write_question("question")
+    #     poll_view.write_answer("answer_1", 0)
+    #     self.assertRaises(WebDriverException, post_form.share)
+    #
+    # def test_post_poll_no_question(self):
+    #     post_page = PostPage(self.driver)
+    #     post_page.open()
+    #     post_form = post_page.get_post_form()
+    #     poll_view = post_form.open_poll_creation()
+    #     poll_view.write_answer("answer_1", 0)
+    #     poll_view.write_answer("answer_2", 1)
+    #     self.assertRaises(WebDriverException, post_form.share)
+
     # def test_post_poll(self):
     #     self._post_poll_to_status()
     #     profile_page = self._to_profile_page()
@@ -179,7 +197,7 @@ class Tests(unittest.TestCase):
         poll_view.set_single_answer(is_single_answer)
         poll_view.write_question("question")
         poll_view.write_answer("answer_1", 0)
-        poll_view.write_answer("answer_3", 1)
+        poll_view.write_answer("answer_2", 1)
         post_form.share()
 
     def _post_string(self, msg, to_status):
