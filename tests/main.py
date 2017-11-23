@@ -36,40 +36,69 @@ class Tests(unittest.TestCase):
         auth_form.set_password(self.PASSWORD)
         auth_form.submit()
 
-    def test_post_to_status(self):
-        # добавить проверку, что этот статус уже не стоит
-        post_msg = "Hello"
-        post_page = PostPage(self.driver)
-        post_page.open()
-        post_form = post_page.get_post_form()
-        post_form.input_post_text(post_msg)
-        post_form.set_to_status(True)
-        post_form.share()
+    # def test_post_to_status(self):
+    #     # добавить проверку, что этот статус уже не стоит
+    #     post_msg = "Hello"
+    #     self._post_string(post_msg, True)
+    #
+    #     main_page = MainPage(self.driver)
+    #     main_page.open()
+    #     profile_page = main_page.get_profile_page()
+    #     profile_page.open()
+    #     status = profile_page.get_status()
+    #     status_string = status.get_status_string()
+    #     self.assertEqual(post_msg, status_string)
+    #
+    #     self.assertFalse(status.contains_image())
+    #
+    # def test_post_not_to_status(self):
+    #     post_msg = "Not to status"
+    #     self._post_string(post_msg, False)
+    #
+    #     main_page = MainPage(self.driver)
+    #     main_page.open()
+    #     profile_page = main_page.get_profile_page()
+    #     profile_page.open()
+    #     status = profile_page.get_status()
+    #     status_string = status.get_status_string()
+    #     self.assertNotEqual(post_msg, status_string)
+
+    # def test_post_empty_string(self):
+    #     post_msg = ""
+    #     post_page = PostPage(self.driver)
+    #     post_page.open()
+    #     post_form = post_page.get_post_form()
+    #     post_form.input_post_text(post_msg)
+    #     self.assertFalse(post_form.is_sharable())
+
+    def test_add_photo(self):
+        self._post_string("msg", True)
+        self._post_img_to_status()
 
         main_page = MainPage(self.driver)
         main_page.open()
         profile_page = main_page.get_profile_page()
         profile_page.open()
         status = profile_page.get_status()
-        status_string = status.get_status_string()
-        self.assertEqual(post_msg, status_string)
+        self.assertTrue(status.contains_image())
 
-    def test_post_not_to_status(self):
-        post_msg = "Not to status"
+    def _post_string(self, msg, to_status):
         post_page = PostPage(self.driver)
         post_page.open()
         post_form = post_page.get_post_form()
-        post_form.input_post_text(post_msg)
-        post_form.set_to_status(False)
+        post_form.input_post_text(msg)
+        post_form.set_to_status(to_status)
         post_form.share()
 
-        main_page = MainPage(self.driver)
-        main_page.open()
-        profile_page = main_page.get_profile_page()
-        profile_page.open()
-        status = profile_page.get_status()
-        status_string = status.get_status_string()
-        self.assertNotEqual(post_msg, status_string)
+    def _post_img_to_status(self):
+        post_page = PostPage(self.driver)
+        post_page.open()
+        post_form = post_page.get_post_form()
+        photo_albums = post_form.open_photo_albums()
+        album = photo_albums.open_first_album()
+        album.choose_first_photo()
+        album.submit_photo()
+        post_form.share()
 
     # denstep Проверить возможность пожаловаться на пост в группе
     # def test_ability_to_complain_on_group_post(self):

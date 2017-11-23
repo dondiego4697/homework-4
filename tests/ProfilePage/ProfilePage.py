@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -22,7 +23,7 @@ class ProfilePage(Page):
 
 
 class Status(Component):
-    XPATH = '//div[@link-class = "rev_cnt_a-in-txt"]'
+    XPATH = '//div[contains(@class, "mst_cnt")]'
 
     def __init__(self, driver, element):
         super(Status, self).__init__(driver)
@@ -31,3 +32,10 @@ class Status(Component):
     def get_status_string(self):
         status_div_xpath = '//div[@link-class = "rev_cnt_a-in-txt"]'
         return self.driver.find_element_by_xpath(status_div_xpath).text
+
+    def contains_image(self):
+        try:
+            self._element.find_element_by_tag_name("img")
+            return True
+        except WebDriverException:
+            return False
