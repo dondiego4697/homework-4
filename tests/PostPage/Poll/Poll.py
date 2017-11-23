@@ -13,6 +13,7 @@ class PollView(Component):
         super(PollView, self).__init__(driver)
         self._elem = elem
         self._question_field = self._get_question_field()
+        self._single_answer_checkbox = self._get_single_answer_checkbox()
         self._single_answer = True
 
     def write_question(self, question):
@@ -21,6 +22,14 @@ class PollView(Component):
     def write_answer(self, answer, answer_num):
         answer_field = self._get_answer_fields()[answer_num]
         self.driver.execute_script('arguments[0].value = "%s"' % answer, answer_field)
+
+    def set_single_answer(self, is_single_answer):
+        if is_single_answer == self._single_answer:
+            self._toggle_single_answer()
+            self._single_answer = not self._single_answer
+
+    def _toggle_single_answer(self):
+        self._single_answer_checkbox.click()
 
     def _get_single_answer_checkbox(self):
         self._wait_self_loaded()

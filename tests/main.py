@@ -42,10 +42,7 @@ class Tests(unittest.TestCase):
     #     post_msg = "Hello"
     #     self._post_string(post_msg, True)
     #
-    #     main_page = MainPage(self.driver)
-    #     main_page.open()
-    #     profile_page = main_page.get_profile_page()
-    #     profile_page.open()
+    #     profile_page = self._to_profile_page()
     #     status = profile_page.get_status()
     #     status_string = status.get_status_string()
     #     self.assertEqual(post_msg, status_string)
@@ -56,10 +53,7 @@ class Tests(unittest.TestCase):
     #     post_msg = "Not to status"
     #     self._post_string(post_msg, False)
     #
-    #     main_page = MainPage(self.driver)
-    #     main_page.open()
-    #     profile_page = main_page.get_profile_page()
-    #     profile_page.open()
+    #     profile_page = self._to_profile_page()
     #     status = profile_page.get_status()
     #     if not status.contains_text():
     #         return
@@ -78,36 +72,26 @@ class Tests(unittest.TestCase):
     #     self._post_string("msg", True)
     #     self._post_img_to_status()
     #
-    #     main_page = MainPage(self.driver)
-    #     main_page.open()
-    #     profile_page = main_page.get_profile_page()
-    #     profile_page.open()
+    #     profile_page = self._to_profile_page()
     #     status = profile_page.get_status()
     #     self.assertTrue(status.contains_image())
     #
     # def test_add_video(self):
     #     self._post_video_to_status()
     #
-    #     main_page = MainPage(self.driver)
-    #     main_page.open()
-    #     profile_page = main_page.get_profile_page()
-    #     profile_page.open()
+    #     profile_page = self._to_profile_page()
     #     status = profile_page.get_status()
     #     self.assertTrue(status.contains_video())
     #
     # def test_add_music(self):
     #     self._post_music_to_status()
     #
-    #     main_page = MainPage(self.driver)
-    #     main_page.open()
-    #     profile_page = main_page.get_profile_page()
-    #     profile_page.open()
+    #     profile_page = self._to_profile_page()
     #     status = profile_page.get_status()
     #     self.assertTrue(status.contains_music())
     #
     # def test_post_delete(self):
-    #     main_page = MainPage(self.driver)
-    #     main_page.open()
+    #     main_page = self._to_main_page()
     #     post = main_page.get_last_post()
     #     post.delete()
     #     self.assertTrue(post.is_deleted())
@@ -121,14 +105,24 @@ class Tests(unittest.TestCase):
     #     self.assertRaises(WebDriverException, post_form.share)
     #
     # def test_post_poll(self):
-    #     post_page = PostPage(self.driver)
-    #     post_page.open()
-    #     post_form = post_page.get_post_form()
-    #     poll_view = post_form.open_poll_creation()
-    #     poll_view.write_question("question")
-    #     poll_view.write_answer("answer_1", 0)
-    #     poll_view.write_answer("answer_2", 1)
-    #     post_form.share()
+    #     self._post_poll_to_status()
+    #     profile_page = self._to_profile_page()
+    #     status = profile_page.get_status()
+    #     self.assertTrue(status.contains_poll())
+
+    # def test_poll_change_answer_single_answer(self):
+    #     post_page = self._post_poll_to_status()
+    #     post = post_page.
+
+    def _post_poll_to_status(self):
+        post_page = PostPage(self.driver)
+        post_page.open()
+        post_form = post_page.get_post_form()
+        poll_view = post_form.open_poll_creation()
+        poll_view.write_question("question")
+        poll_view.write_answer("answer_1", 0)
+        poll_view.write_answer("answer_3", 1)
+        post_form.share()
 
     def _post_string(self, msg, to_status):
         post_page = PostPage(self.driver)
@@ -164,6 +158,18 @@ class Tests(unittest.TestCase):
         music_load.select_first_music()
         music_load.submit()
         post_form.share()
+
+    def _to_main_page(self):
+        main_page = MainPage(self.driver)
+        main_page.open()
+        return main_page
+
+    def _to_profile_page(self):
+        main_page = MainPage(self.driver)
+        main_page.open()
+        profile_page = main_page.get_profile_page()
+        profile_page.open()
+        return profile_page
 
 
     # denstep Проверить возможность пожаловаться на пост в группе

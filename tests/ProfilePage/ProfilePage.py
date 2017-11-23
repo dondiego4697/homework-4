@@ -4,6 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 
+from tests.MainPage.Post.Post import Post
 from tests.Page.Page import Page
 from tests.Component.Component import Component
 
@@ -14,6 +15,13 @@ class ProfilePage(Page):
     def __init__(self, driver, path):
         super(ProfilePage, self).__init__(driver)
         self.PATH = path
+
+    def get_last_post(self):
+        last_post_xpath = './/div[@class="feed h-mod"]'
+        element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, last_post_xpath))
+        )
+        return Post(self.driver, element)
 
     def get_status(self):
         element = WebDriverWait(self.driver, 10).until(
@@ -33,9 +41,16 @@ class Status(Component):
         status_div_xpath = '//div[@link-class = "rev_cnt_a-in-txt"]'
         return self._get_element_by_xpath(status_div_xpath).text
 
+    def contains_poll(self):
+        try:
+            self._element.find_element_by_xpath('.//div[@data-reveal-op="poll"]')
+            return True
+        except WebDriverException:
+            return False
+
     def contains_text(self):
         try:
-            self._element.find_element_by_xpath('//a[@class = "rev_cnt_a"]')
+            self._element.find_element_by_xpath('.//a[@class = "rev_cnt_a"]')
             return True
         except WebDriverException:
             return False
