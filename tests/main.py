@@ -71,16 +71,32 @@ class Tests(unittest.TestCase):
     #     post_form.input_post_text(post_msg)
     #     self.assertFalse(post_form.is_sharable())
     #
-    def test_add_photo(self):
-        self._post_string("msg", True)
-        self._post_img_to_status()
+    # def test_add_photo(self):
+    #     self._post_string("msg", True)
+    #     self._post_img_to_status()
+    #
+    #     main_page = MainPage(self.driver)
+    #     main_page.open()
+    #     profile_page = main_page.get_profile_page()
+    #     profile_page.open()
+    #     status = profile_page.get_status()
+    #     self.assertTrue(status.contains_image())
+
+    def test_add_video(self):
+        post_page = PostPage(self.driver)
+        post_page.open()
+        post_form = post_page.get_post_form()
+        video_load = post_form.open_video_load()
+        video_load.attach_first_video()
+
+        post_form.share()
 
         main_page = MainPage(self.driver)
         main_page.open()
         profile_page = main_page.get_profile_page()
         profile_page.open()
         status = profile_page.get_status()
-        self.assertTrue(status.contains_image())
+        self.assertTrue(status.contains_video())
 
     def _post_string(self, msg, to_status):
         post_page = PostPage(self.driver)

@@ -39,3 +39,11 @@ class Status(Component):
             return True
         except WebDriverException:
             return False
+
+    def contains_video(self):
+        video_sign_xpath = '//div[@class = "vid_play"]'
+        try:
+            self._element.find_element_by_xpath(video_sign_xpath)
+            return True
+        except WebDriverException:
+            return False
