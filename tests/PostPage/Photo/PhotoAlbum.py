@@ -36,8 +36,3 @@ class PhotoAlbumView(Component):
         return WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, photo_xpath))
         )
-
-    def _wait_self_loaded(self):
-        WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, PhotoAlbumView.XPATH))
-        )

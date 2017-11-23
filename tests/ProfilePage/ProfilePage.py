@@ -31,9 +31,14 @@ class Status(Component):
 
     def get_status_string(self):
         status_div_xpath = '//div[@link-class = "rev_cnt_a-in-txt"]'
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, status_div_xpath))
-        ).text
+        return self._get_element_by_xpath(status_div_xpath).text
+
+    def contains_text(self):
+        try:
+            self._element.find_element_by_xpath('//a[@class = "rev_cnt_a"]')
+            return True
+        except WebDriverException:
+            return False
 
     def contains_image(self):
         try:

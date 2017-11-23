@@ -61,6 +61,8 @@ class Tests(unittest.TestCase):
     #     profile_page = main_page.get_profile_page()
     #     profile_page.open()
     #     status = profile_page.get_status()
+    #     if not status.contains_text():
+    #         return
     #     status_string = status.get_status_string()
     #     self.assertNotEqual(post_msg, status_string)
     #

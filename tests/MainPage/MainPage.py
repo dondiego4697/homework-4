@@ -51,9 +51,7 @@ class Post(Component):
 
     def _get_delete_btn(self):
         delete_btn_xpath = './/a[contains(@class, "feed_close")]'
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, delete_btn_xpath))
-        )
+        return self._get_element_by_xpath(delete_btn_xpath)
 
 
 

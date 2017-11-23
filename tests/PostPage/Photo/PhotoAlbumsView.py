@@ -27,7 +27,4 @@ class PhotoAlbumsView(Component):
 
     def _get_first_album_cover(self):
         album_cover_xpath = '//img[@class="photo-sc_i_cnt_a_img va_target"]'
-
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, album_cover_xpath))
-        )
+        return self._get_element_by_xpath(album_cover_xpath)

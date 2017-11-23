@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
 from tests.Component.Component import Component
 
 
@@ -22,20 +18,9 @@ class MusicLoadView(Component):
         self._submit_btn.click()
 
     def _get_first_music_clickable(self):
-        self._wait_self_loaded()
         music_xpath = '//div[contains(@class, "posting-form_track")]'
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, music_xpath))
-        )
+        return self._get_element_by_xpath(music_xpath)
 
     def _get_submit_btn(self):
-        self._wait_self_loaded()
-        music_xpath = '//a[contains(@class, "form-actions_yes")]'
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, music_xpath))
-        )
-
-    def _wait_self_loaded(self):
-        WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, MusicLoadView.XPATH))
-        )
+        submit_btn_xpath = '//a[contains(@class, "form-actions_yes")]'
+        return self._get_element_by_xpath(submit_btn_xpath)

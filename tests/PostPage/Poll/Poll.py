@@ -13,6 +13,7 @@ class PollView(Component):
         super(PollView, self).__init__(driver)
         self._elem = elem
         self._question_field = self._get_question_field()
+        self._single_answer = True
 
     def write_question(self, question):
         self.driver.execute_script('arguments[0].value = "%s"' % question, self._question_field)
@@ -21,12 +22,14 @@ class PollView(Component):
         answer_field = self._get_answer_fields()[answer_num]
         self.driver.execute_script('arguments[0].value = "%s"' % answer, answer_field)
 
-    def _get_question_field(self):
+    def _get_single_answer_checkbox(self):
         self._wait_self_loaded()
+        checkbox_xpath = './/input[@name = "singleChoice"]'
+        return self._get_element_by_xpath(checkbox_xpath)
+
+    def _get_question_field(self):
         question_xpath = './/textarea[contains(@class, "itx posting-form_poll__question")]'
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, question_xpath))
-        )
+        return self._get_element_by_xpath(question_xpath)
 
     def _get_answer_fields(self):
         self._wait_self_loaded()
@@ -35,8 +38,3 @@ class PollView(Component):
             EC.presence_of_element_located((By.XPATH, answer_xpath))
         )
         return self.driver.find_elements_by_xpath(answer_xpath)
-
-    def _wait_self_loaded(self):
-        WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, PollView.XPATH))
-        )

@@ -46,11 +46,11 @@ class PostForm(Component):
         self._post_field.send_keys(text)
 
     def close(self):
-        self._wait_overlay_invisible()
+        self._wait_self_loaded()
         self._close_btn.click()
 
     def share(self):
-        self._wait_overlay_invisible()
+        self._wait_self_loaded()
         WebDriverWait(self.driver, 10).until(
             EC.invisibility_of_element_located((By.XPATH, '//div[@class = "modal-new_cnt"]'))
         )
@@ -61,19 +61,18 @@ class PostForm(Component):
         )
 
     def set_to_status(self, to_status):
-        # можно вытащить через js
-        self._wait_overlay_invisible()
+        self._wait_self_loaded()
         if to_status == self._to_status:
             return
         else:
-            self.toggle_to_status()
+            self._toggle_to_status()
             self._to_status = not self._to_status
 
-    def toggle_to_status(self):
+    def _toggle_to_status(self):
         self._status_checkbox.click()
 
     def open_photo_albums(self):
-        self._wait_overlay_invisible()
+        self._wait_self_loaded()
         self._add_image_btn.click()
         photo_albums_elem = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, PhotoAlbumsView.XPATH))
@@ -81,7 +80,7 @@ class PostForm(Component):
         return PhotoAlbumsView(self.driver, photo_albums_elem)
 
     def open_video_load(self):
-        self._wait_overlay_invisible()
+        self._wait_self_loaded()
         self._add_video_btn.click()
         photo_albums_elem = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, VideoLoadView.XPATH))
@@ -89,7 +88,7 @@ class PostForm(Component):
         return VideoLoadView(self.driver, photo_albums_elem)
 
     def open_music_load(self):
-        self._wait_overlay_invisible()
+        self._wait_self_loaded()
         self._add_music_btn.click()
         music_view = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, MusicLoadView.XPATH))
@@ -97,7 +96,7 @@ class PostForm(Component):
         return MusicLoadView(self.driver, music_view)
 
     def open_poll_creation(self):
-        self._wait_overlay_invisible()
+        self._wait_self_loaded()
         self._add_poll_btn.click()
         poll_elem = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, PollView.XPATH))
@@ -105,44 +104,45 @@ class PostForm(Component):
         return PollView(self.driver, poll_elem)
 
     def _get_add_video_btn(self):
-        add_video_btn_id = 'openvideo'
-        return self.driver.find_element_by_id(add_video_btn_id)
+        add_video_btn_xpath = '//*[@id = "openvideo"]'
+        return self._get_element_by_xpath(add_video_btn_xpath)
 
     def _get_add_music_btn(self):
-        add_music_btn_id = 'openmusic'
-        return self.driver.find_element_by_id(add_music_btn_id)
+        add_music_btn_xpath = '//*[@id = "openmusic"]'
+        return self._get_element_by_xpath(add_music_btn_xpath)
 
     def _get_add_image_btn(self):
-        add_image_btn_id = 'openimage'
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.ID, add_image_btn_id))
-        )
+        add_image_btn_xpath = '//*[@id = "openimage"]'
+        return self._get_element_by_xpath(add_image_btn_xpath)
 
     def _get_add_poll_btn(self):
-        add_poll_btn_id = 'openpoll'
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.ID, add_poll_btn_id))
-        )
+        add_poll_btn_xpath = '//*[@id = "openpoll"]'
+        return self._get_element_by_xpath(add_poll_btn_xpath)
 
     def _get_close_btn(self):
         close_btn_xpath = '//div[contains(@class, "media-layer_close_ico")]'
-        return self.driver.find_element_by_xpath(close_btn_xpath)
+        return self._get_element_by_xpath(close_btn_xpath)
 
     def _get_share_btn(self):
         share_btn_xpath = '//div[@class="posting-form_ac-status"]/../input'
-        return self.driver.find_element_by_xpath(share_btn_xpath)
+        return self._get_element_by_xpath(share_btn_xpath)
 
     def _get_status_check_box(self):
         as_status_xpath = '//div[contains(@class, "posting-form_ac-status")]/input[@type = "checkbox"]'
-        return self.driver.find_element_by_xpath(as_status_xpath)
+        return self._get_element_by_xpath(as_status_xpath)
 
     def _get_post_field(self):
-        post_field_id = 'posting_form_text_field'
-        return self.driver.find_element_by_id(post_field_id)
+        post_field_xpath = '//*[@id = "posting_form_text_field"]'
+        return self._get_element_by_xpath(post_field_xpath)
+
+    def _wait_self_loaded(self):
+        super(PostForm, self)._wait_self_loaded()
+        self._wait_overlay_invisible()
 
     def _wait_overlay_invisible(self):
         overlay_xpath = '//div[contains(@class, "posting-form_overlay")]'
         WebDriverWait(self.driver, 10).until(
             EC.invisibility_of_element_located((By.XPATH, overlay_xpath))
         )
+
 
