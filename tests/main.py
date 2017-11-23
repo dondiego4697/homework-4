@@ -81,22 +81,26 @@ class Tests(unittest.TestCase):
     #     profile_page.open()
     #     status = profile_page.get_status()
     #     self.assertTrue(status.contains_image())
+    #
+    # def test_add_video(self):
+    #     self._post_video_to_status()
+    #
+    #     main_page = MainPage(self.driver)
+    #     main_page.open()
+    #     profile_page = main_page.get_profile_page()
+    #     profile_page.open()
+    #     status = profile_page.get_status()
+    #     self.assertTrue(status.contains_video())
 
-    def test_add_video(self):
-        post_page = PostPage(self.driver)
-        post_page.open()
-        post_form = post_page.get_post_form()
-        video_load = post_form.open_video_load()
-        video_load.attach_first_video()
-
-        post_form.share()
-
-        main_page = MainPage(self.driver)
-        main_page.open()
-        profile_page = main_page.get_profile_page()
-        profile_page.open()
-        status = profile_page.get_status()
-        self.assertTrue(status.contains_video())
+    # def test_add_music(self):
+    #     self._post_music_to_status()
+    #
+    #     main_page = MainPage(self.driver)
+    #     main_page.open()
+    #     profile_page = main_page.get_profile_page()
+    #     profile_page.open()
+    #     status = profile_page.get_status()
+    #     self.assertTrue(status.contains_music())
 
     def _post_string(self, msg, to_status):
         post_page = PostPage(self.driver)
@@ -115,6 +119,24 @@ class Tests(unittest.TestCase):
         album.choose_first_photo()
         album.submit_photo()
         post_form.share()
+
+    def _post_video_to_status(self):
+        post_page = PostPage(self.driver)
+        post_page.open()
+        post_form = post_page.get_post_form()
+        video_load = post_form.open_video_load()
+        video_load.attach_first_video()
+        post_form.share()
+
+    def _post_music_to_status(self):
+        post_page = PostPage(self.driver)
+        post_page.open()
+        post_form = post_page.get_post_form()
+        music_load = post_form.open_music_load()
+        music_load.select_first_music()
+        music_load.submit()
+        post_form.share()
+
 
     # denstep Проверить возможность пожаловаться на пост в группе
     # def test_ability_to_complain_on_group_post(self):

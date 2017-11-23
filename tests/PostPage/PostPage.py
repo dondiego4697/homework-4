@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 
 from tests.Component.Component import Component
 from tests.Page.Page import Page
+from tests.PostPage.Music.Music import MusicLoadView
 from tests.PostPage.Photo.PhotoAlbumsView import PhotoAlbumsView
 from tests.PostPage.Video.VideoLoadView import VideoLoadView
 
@@ -91,6 +92,14 @@ class PostForm(Component):
             EC.presence_of_element_located((By.XPATH, VideoLoadView.XPATH))
         )
         return VideoLoadView(self.driver, photo_albums_elem)
+
+    def open_music_load(self):
+        self._wait_overlay_invisible()
+        self._add_music_btn.click()
+        photo_albums_elem = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, MusicLoadView.XPATH))
+        )
+        return MusicLoadView(self.driver, photo_albums_elem)
 
     def _get_add_video_btn(self):
         add_video_btn_id = 'openvideo'
