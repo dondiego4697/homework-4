@@ -102,6 +102,13 @@ class Tests(unittest.TestCase):
     #     status = profile_page.get_status()
     #     self.assertTrue(status.contains_music())
 
+    def test_post_delete(self):
+        main_page = MainPage(self.driver)
+        main_page.open()
+        post = main_page.get_last_post()
+        post.delete()
+        self.assertTrue(post.is_deleted())
+
     def _post_string(self, msg, to_status):
         post_page = PostPage(self.driver)
         post_page.open()

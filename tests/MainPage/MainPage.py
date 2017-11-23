@@ -21,13 +21,39 @@ class MainPage(Page):
         profile_path = element.get_attribute('pathname')
         return ProfilePage(self.driver, profile_path)
 
+    def get_last_post(self):
+        element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, Post.XPATH))
+        )
+        return Post(self.driver, element)
+
 
 class Post(Component):
-    XPATH = '//div[contains(@class, "feed")]'
+    XPATH = '//div[contains(@class, "feed-w")]'
 
     def __init__(self, driver, element):
         super(Post, self).__init__(driver)
         self._elem = element
+        self._delete_btn = self._get_delete_btn()
+
+    def delete(self):
+        self.driver.execute_script('arguments[0].click()', self._delete_btn)
+
+    def is_deleted(self):
+        try:
+            deleted_xpath = './/span[contains(@class, "delete-stub_info")]'
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, deleted_xpath))
+            )
+            return True
+        except WebDriverException:
+            return False
+
+    def _get_delete_btn(self):
+        delete_btn_xpath = './/a[contains(@class, "feed_close")]'
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, delete_btn_xpath))
+        )
 
 
 
