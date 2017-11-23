@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 
 from tests.Component.Component import Component
 from tests.Page.Page import Page
+from tests.PostPage.Photo.PhotoAlbumsView import PhotoAlbumsView
 
 
 class PostPage(Page):
@@ -116,68 +117,5 @@ class PostForm(Component):
         overlay_xpath = '//div[contains(@class, "posting-form_overlay")]'
         WebDriverWait(self.driver, 10).until(
             EC.invisibility_of_element_located((By.XPATH, overlay_xpath))
-        )
-
-
-class PhotoAlbumsView(Component):
-    XPATH = '//div[@class = "modal-new_center"]'
-
-    def __init__(self, driver, elem):
-        super(PhotoAlbumsView, self).__init__(driver)
-        self._elem = elem
-        self._first_album_cover = self._get_first_album_cover()
-
-    def open_first_album(self):
-        WebDriverWait(self.driver, 10).until(
-            EC.visibility_of(self._first_album_cover)
-        )
-        self._first_album_cover.click()
-        album_elem = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, PhotoAlbumView.XPATH))
-        )
-        return PhotoAlbumView(self.driver, album_elem)
-
-    def _get_first_album_cover(self):
-        album_cover_xpath = '//img[@class="photo-sc_i_cnt_a_img va_target"]'
-
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, album_cover_xpath))
-        )
-
-
-class PhotoAlbumView(Component):
-    XPATH = '//*[@id="hook_Form_AttachDialogPhotosFormForm"]'
-
-    def __init__(self, driver, elem):
-        super(PhotoAlbumView, self).__init__(driver)
-        self._elem = elem
-        self._first_photo = self._get_first_photo()
-        self._submit_btn = self._get_submit_btn()
-
-    def choose_first_photo(self):
-        WebDriverWait(self.driver, 10).until(
-            EC.visibility_of(self._first_photo)
-        )
-        self._first_photo.click()
-
-    def submit_photo(self):
-        self._submit_btn.click()
-
-    def _get_submit_btn(self):
-        submit_btn_xpath = '//input[@id="hook_FormButton_button_attach"]'
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, submit_btn_xpath))
-        )
-
-    def _get_first_photo(self):
-        self._wait_self_loaded()
-        photo_xpath = '//img[@class = "photo-crop_img"]'
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, photo_xpath))
-        )
-
-    def _wait_self_loaded(self):
-        WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, PhotoAlbumView.XPATH))
         )
 

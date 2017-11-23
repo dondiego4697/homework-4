@@ -70,7 +70,7 @@ class Tests(unittest.TestCase):
     #     post_form = post_page.get_post_form()
     #     post_form.input_post_text(post_msg)
     #     self.assertFalse(post_form.is_sharable())
-
+    #
     def test_add_photo(self):
         self._post_string("msg", True)
         self._post_img_to_status()
