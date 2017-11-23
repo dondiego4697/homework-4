@@ -24,7 +24,7 @@ class PollView(Component):
         self.driver.execute_script('arguments[0].value = "%s"' % answer, answer_field)
 
     def set_single_answer(self, is_single_answer):
-        if is_single_answer == self._single_answer:
+        if is_single_answer != self._single_answer:
             self._toggle_single_answer()
             self._single_answer = not self._single_answer
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import WebDriverException, TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -34,10 +34,10 @@ class Post(Component):
         except WebDriverException:
             return False
 
-    def vote_variant(self, variant_num):
+    def get_poll_variants(self):
         self._wait_self_loaded()
-        variant_xpath = './/input[contains(@name, "poll") and @type = "radio"]'
-        self._elem.find_elements_by_xpath(variant_xpath)[variant_num].click()
+        variant_xpath = './/input[contains(@name, "poll")]'
+        return [VoteVariant(self.driver, element) for element in self._elem.find_elements_by_xpath(variant_xpath)]
 
     def contains_image(self):
         try:
@@ -65,3 +65,40 @@ class Post(Component):
     def _get_delete_btn(self):
         delete_btn_xpath = './/a[contains(@class, "feed_close")]'
         return self._get_element_by_xpath(delete_btn_xpath)
+
+
+class VoteVariant(Component):
+    def __init__(self, driver, element):
+        super(VoteVariant, self).__init__(driver)
+        self._elem = element
+
+    def is_voted(self):
+        return self.driver.execute_script("return arguments[0].checked", self._elem)
+
+    def set_voted(self, submit=True):
+        self._set_status(True, submit)
+
+    def set_unvoted(self, submit=True):
+        self._set_status(False, submit)
+
+    def _set_status(self, status, submit):
+        self._wait_self_loaded()
+        checked = self.driver.execute_script("return arguments[0].checked", self._elem)
+
+        if checked == status:
+            return
+
+        self._elem.click()
+        try:
+            if submit:
+                submit_btn = WebDriverWait(self.driver, 0.1).until(
+                    EC.presence_of_element_located((By.XPATH, './/span[@class="al poll_ac_a poll_ac_a__yes"]'))
+                )
+                submit_btn.click()
+            else:
+                not_submit_btn = WebDriverWait(self.driver, 0.1).until(
+                    EC.presence_of_element_located((By.XPATH, './/span[@class="lp poll_ac_a poll_ac_a__no"]'))
+                )
+                not_submit_btn.click()
+        except TimeoutException:
+            pass
