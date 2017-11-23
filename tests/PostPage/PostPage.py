@@ -8,6 +8,7 @@ from tests.Component.Component import Component
 from tests.Page.Page import Page
 from tests.PostPage.Music.Music import MusicLoadView
 from tests.PostPage.Photo.PhotoAlbumsView import PhotoAlbumsView
+from tests.PostPage.Poll.Poll import PollView
 from tests.PostPage.Video.VideoLoadView import VideoLoadView
 
 
@@ -36,6 +37,7 @@ class PostForm(Component):
         self._add_image_btn = self._get_add_image_btn()
         self._add_music_btn = self._get_add_music_btn()
         self._add_video_btn = self._get_add_video_btn()
+        self._add_poll_btn = self._get_add_poll_btn()
 
         self._to_status = True
 
@@ -52,9 +54,10 @@ class PostForm(Component):
         WebDriverWait(self.driver, 10).until(
             EC.invisibility_of_element_located((By.XPATH, '//div[@class = "modal-new_cnt"]'))
         )
-        self._share_btn.click()
+        self.driver.execute_script('arguments[0].click()', self._share_btn)
+        element_to_disappear_xpath = '//div[contains(@class, "media-layer__topic __active __create")]'
         WebDriverWait(self.driver, 10).until(
-            EC.invisibility_of_element_located((By.XPATH, PostForm.POST_FORM_XPATH))
+            EC.invisibility_of_element_located((By.XPATH, element_to_disappear_xpath))
         )
 
     def set_to_status(self, to_status):
@@ -68,14 +71,6 @@ class PostForm(Component):
 
     def toggle_to_status(self):
         self._status_checkbox.click()
-
-    def is_sharable(self):
-        # todo проверять, что окно исчезает после нажатия
-        try:
-            self._share_btn.click()
-            return True
-        except WebDriverException:
-            return False
 
     def open_photo_albums(self):
         self._wait_overlay_invisible()
@@ -96,10 +91,18 @@ class PostForm(Component):
     def open_music_load(self):
         self._wait_overlay_invisible()
         self._add_music_btn.click()
-        photo_albums_elem = WebDriverWait(self.driver, 10).until(
+        music_view = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, MusicLoadView.XPATH))
         )
-        return MusicLoadView(self.driver, photo_albums_elem)
+        return MusicLoadView(self.driver, music_view)
+
+    def open_poll_creation(self):
+        self._wait_overlay_invisible()
+        self._add_poll_btn.click()
+        poll_elem = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, PollView.XPATH))
+        )
+        return PollView(self.driver, poll_elem)
 
     def _get_add_video_btn(self):
         add_video_btn_id = 'openvideo'
@@ -113,6 +116,12 @@ class PostForm(Component):
         add_image_btn_id = 'openimage'
         return WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.ID, add_image_btn_id))
+        )
+
+    def _get_add_poll_btn(self):
+        add_poll_btn_id = 'openpoll'
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, add_poll_btn_id))
         )
 
     def _get_close_btn(self):

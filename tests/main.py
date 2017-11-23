@@ -3,6 +3,7 @@
 import os
 
 import unittest
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver import DesiredCapabilities, Remote
 from tests.AuthPage.AuthPage import AuthPage
 from tests.PostPage.PostPage import PostPage
@@ -62,14 +63,14 @@ class Tests(unittest.TestCase):
     #     status = profile_page.get_status()
     #     status_string = status.get_status_string()
     #     self.assertNotEqual(post_msg, status_string)
-
+    #
     # def test_post_empty_string(self):
     #     post_msg = ""
     #     post_page = PostPage(self.driver)
     #     post_page.open()
     #     post_form = post_page.get_post_form()
     #     post_form.input_post_text(post_msg)
-    #     self.assertFalse(post_form.is_sharable())
+    #     self.assertRaises(WebDriverException, post_form.share)
     #
     # def test_add_photo(self):
     #     self._post_string("msg", True)
@@ -91,7 +92,7 @@ class Tests(unittest.TestCase):
     #     profile_page.open()
     #     status = profile_page.get_status()
     #     self.assertTrue(status.contains_video())
-
+    #
     # def test_add_music(self):
     #     self._post_music_to_status()
     #
@@ -101,13 +102,31 @@ class Tests(unittest.TestCase):
     #     profile_page.open()
     #     status = profile_page.get_status()
     #     self.assertTrue(status.contains_music())
-
-    def test_post_delete(self):
-        main_page = MainPage(self.driver)
-        main_page.open()
-        post = main_page.get_last_post()
-        post.delete()
-        self.assertTrue(post.is_deleted())
+    #
+    # def test_post_delete(self):
+    #     main_page = MainPage(self.driver)
+    #     main_page.open()
+    #     post = main_page.get_last_post()
+    #     post.delete()
+    #     self.assertTrue(post.is_deleted())
+    #
+    # def test_post_empty_poll(self):
+    #     post_page = PostPage(self.driver)
+    #     post_page.open()
+    #     post_form = post_page.get_post_form()
+    #     poll_view = post_form.open_poll_creation()
+    #     poll_view.write_question("question")
+    #     self.assertRaises(WebDriverException, post_form.share)
+    #
+    # def test_post_poll(self):
+    #     post_page = PostPage(self.driver)
+    #     post_page.open()
+    #     post_form = post_page.get_post_form()
+    #     poll_view = post_form.open_poll_creation()
+    #     poll_view.write_question("question")
+    #     poll_view.write_answer("answer_1", 0)
+    #     poll_view.write_answer("answer_2", 1)
+    #     post_form.share()
 
     def _post_string(self, msg, to_status):
         post_page = PostPage(self.driver)
