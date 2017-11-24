@@ -141,6 +141,13 @@ class ReshareView(Component):
         )
         return ReshareWithText(self.driver, elem)
 
+    def share_in_group(self):
+        self._reshare_in_group.click()
+        elem = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, ReshareInGroup.XPATH))
+        )
+        return ReshareInGroup(self.driver, elem)
+
     def share_now(self):
         WebDriverWait(self.driver, 0.1).until(
             EC.visibility_of(self._reshare_now)
@@ -247,3 +254,47 @@ class ReshareWithText(Component):
 
     def _get_comment_field(self):
         return self._get_element_by_xpath('.//textarea[@name="any_text_here"]')
+
+
+class ReshareInGroup(Component):
+    XPATH = './/div[@id="reshare"]'
+
+    def __init__(self, driver, element):
+        super(ReshareInGroup, self).__init__(driver)
+        self._elem = element
+
+        self._comment_field = self._get_comment_field()
+        self._group_field = self._get_group_field()
+        self._share_btn = self._get_share_btn()
+
+    def set_text(self, text):
+        self.driver.execute_script("arguments[0].value = arguments[1]", self._comment_field, text)
+
+    def set_group(self, group_name, group_num=0):
+        self.driver.execute_script("arguments[0].value = arguments[1]", self._group_field, group_name)
+        suggests = self._get_group_suggests()
+        suggests[group_num].click()
+
+    def submit(self):
+        self._share_btn.click()
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, self.XPATH))
+        )
+
+    def _get_comment_field(self):
+        return self._get_element_by_xpath('//*[@id="t.posting_form_text_field"]', self._elem)
+
+    def _get_group_field(self):
+        return self._get_element_by_xpath('.//*[@id="reshare_XpostGroupNameInput"]', self._elem)
+
+    def _get_share_btn(self):
+        return self._get_element_by_xpath('.//*[@id="reshare.submit"]', self._elem)
+
+    def _get_group_suggests(self):
+        return self._get_elements_by_xpath('.//li[contains(@id, "reshare_XpostGroupSuggest")]')
+
+    def _wait_self_loaded(self):
+        super(ReshareInGroup, self)._wait_self_loaded()
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, '//div[contains(@class, "posting-form_overlay")]'))
+        )

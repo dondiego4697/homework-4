@@ -16,6 +16,15 @@ class ProfilePage(Page):
         super(ProfilePage, self).__init__(driver)
         self.PATH = path
 
+    # Will return name of the group to which the post was reshared. Throws exception otherwise
+    def get_reshared_group_name(self):
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                '//div[@id="hook_Block_MiddleColumnTopCard_StatusNew"]//a[@class="group-link o"]'
+            ))
+        ).text
+
     def get_last_post(self):
         element = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, Post.XPATH))
