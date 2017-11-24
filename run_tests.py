@@ -7,6 +7,7 @@ from tests.poll_tests import PollTests
 from tests.post_manipulation_tests import PostManipulationTests
 from tests.reshare_tests import ReshareTests
 from tests.status_tests import StatusTests
+from tests.uncategorized_tests import UncategorizedTests
 
 if __name__ == '__main__':
     result = False
@@ -29,10 +30,14 @@ if __name__ == '__main__':
     #     unittest.makeSuite(PostManipulationTests),
     # ))
     # result |= unittest.TextTestRunner().run(post_manipulation_suite).wasSuccessful()
-
-    reshare_suite = unittest.TestSuite((
-        unittest.makeSuite(ReshareTests),
+    #
+    # reshare_suite = unittest.TestSuite((
+    #     unittest.makeSuite(ReshareTests),
+    # ))
+    # result |= unittest.TextTestRunner().run(reshare_suite).wasSuccessful()
+    uncategorized_suite = unittest.TestSuite((
+        unittest.makeSuite(UncategorizedTests),
     ))
-    result |= unittest.TextTestRunner().run(reshare_suite).wasSuccessful()
+    result |= unittest.TextTestRunner().run(uncategorized_suite).wasSuccessful()
 
     sys.exit(not result)

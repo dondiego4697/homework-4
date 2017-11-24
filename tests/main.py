@@ -24,7 +24,6 @@ class Tests(unittest.TestCase):
         )
 
         self.authentication()
-        # self.test_smoke_post_page()
 
     def tearDown(self):
         self.driver.quit()

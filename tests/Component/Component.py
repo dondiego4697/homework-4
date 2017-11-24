@@ -31,7 +31,6 @@ class Component(object):
         else:
             return root.find_elements_by_xpath(xpath)
 
-
     def _wait_self_loaded(self):
         if self.XPATH is None:
             return
