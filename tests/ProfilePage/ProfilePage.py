@@ -17,9 +17,8 @@ class ProfilePage(Page):
         self.PATH = path
 
     def get_last_post(self):
-        last_post_xpath = './/div[@class="feed h-mod"]'
         element = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, last_post_xpath))
+            EC.presence_of_element_located((By.XPATH, Post.XPATH))
         )
         return Post(self.driver, element)
 

@@ -13,6 +13,7 @@ class Post(Component):
         super(Post, self).__init__(driver)
         self._elem = element
         self._delete_btn = self._get_delete_btn()
+        self._reshare_btn = self._get_reshare_btn()
 
     def delete(self):
         self.driver.execute_script('arguments[0].click()', self._delete_btn)
@@ -62,9 +63,18 @@ class Post(Component):
         except WebDriverException:
             return False
 
+    def get_reshare_panel(self):
+        self._reshare_btn.click()
+        element = self._get_element_by_xpath(ReshareView.XPATH)
+        return ReshareView(self.driver, element)
+
+    def _get_reshare_btn(self):
+        reshare_btn_xpath = './/button[@class="h-mod widget_cnt" and @data-type="RESHARE"]'
+        return self._get_element_by_xpath(reshare_btn_xpath, self._elem)
+
     def _get_delete_btn(self):
         delete_btn_xpath = './/a[contains(@class, "feed_close")]'
-        return self._get_element_by_xpath(delete_btn_xpath)
+        return self._get_element_by_xpath(delete_btn_xpath, self._elem)
 
 
 class VoteVariant(Component):
@@ -102,3 +112,95 @@ class VoteVariant(Component):
                 not_submit_btn.click()
         except TimeoutException:
             pass
+
+
+class ReshareView(Component):
+    XPATH = '//div[@class="sc-menu __reshare __noarrow sc-menu__top"]'
+
+    def __init__(self, driver, element):
+        super(ReshareView, self).__init__(driver)
+        self._elem = element
+        (
+            self._reshare_now,
+            self._reshare_with_text,
+            self._reshare_in_msg,
+            self._reshare_in_group
+        ) = self._get_share_options()
+
+    def share_in_message(self):
+        self._reshare_in_msg.click()
+        elem = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, ReshareInMessageView.XPATH))
+        )
+        return ReshareInMessageView(self.driver, elem)
+
+    def share_now(self):
+        WebDriverWait(self.driver, 0.1).until(
+            EC.visibility_of(self._reshare_now)
+        )
+        self._reshare_now.click()
+
+    def is_shared_now(self):
+        try:
+            shared_now_label_xpath = './/i[@class="tico_img ic ic_ok"]'
+            self._get_element_by_xpath(shared_now_label_xpath)
+            return True
+        except WebDriverException:
+            return False
+
+    def _get_share_options(self):
+        options_xpath = '//div[@class="sc-menu __reshare __noarrow sc-menu__top"]//a'
+        return self._get_elements_by_xpath(options_xpath)
+
+
+class ReshareInMessageView(Component):
+    XPATH = './/div[@id="reshare"]'
+
+    def __init__(self, driver, element):
+        super(ReshareInMessageView, self).__init__(driver)
+        self._elem = element
+        self._submit_btn = self._get_submit_btn()
+        self._friend_name_field = self._get_friend_name_field()
+
+    def select_friend(self, friend_num):
+        try:
+            options = self._get_friend_options()
+            if len(options) > 0:
+                options[0].click()
+                return
+        except TimeoutException:
+            pass
+
+        self._friend_name_field.click()
+        self._get_friend_options()[friend_num].click()
+
+    def submit(self):
+        self._submit_btn.click()
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, self.XPATH))
+        )
+
+    def visible(self):
+        return self._elem.is_displayed()
+
+    def _get_friend_name_field(self):
+        return self._get_element_by_xpath(
+            './/div[@id="reshare.wfid-tags"]',
+            self._elem
+        )
+
+    def _get_friend_options(self):
+        return self._get_elements_by_xpath(
+            './/li[@class="suggest_li"]',
+            self._elem
+        )
+
+    def _get_submit_btn(self):
+        return self._get_element_by_xpath(
+            './/input[@id="reshare.submit"]',
+            self._elem
+        )
+
+
+
+
