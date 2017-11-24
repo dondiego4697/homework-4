@@ -21,13 +21,3 @@ class ReshareTests(Tests):
         reshare_in_msg_view.submit()
         self.assertRaises(StaleElementReferenceException, reshare_in_msg_view.visible)
 
-    # def test_share_now_two_times(self):
-    #     self._post_string("msg", False)
-    #     profile_page = self._to_profile_page()
-    #     post = profile_page.get_last_post()
-    #     reshare_panel = post.get_reshare_panel()
-    #     reshare_panel.share_now()
-    #     self.assertTrue(reshare_panel.is_shared_now())
-    #     print([reshare_panel._reshare_now.is_enabled(), reshare_panel._reshare_now.is_displayed()])
-    #     self.assertRaises(StaleElementReferenceException, reshare_panel.share_now)
-
