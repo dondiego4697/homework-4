@@ -134,6 +134,13 @@ class ReshareView(Component):
         )
         return ReshareInMessageView(self.driver, elem)
 
+    def share_with_text(self):
+        self._reshare_with_text.click()
+        elem = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, ReshareWithText.XPATH))
+        )
+        return ReshareWithText(self.driver, elem)
+
     def share_now(self):
         WebDriverWait(self.driver, 0.1).until(
             EC.visibility_of(self._reshare_now)
@@ -202,5 +209,41 @@ class ReshareInMessageView(Component):
         )
 
 
+class ReshareWithText(Component):
+    XPATH = '//div[@id="reshare"]'
 
+    def __init__(self, driver, element):
+        super(ReshareWithText, self).__init__(driver)
+        self._elem = element
+        self._comment_field = self._get_comment_field()
+        self._submit_btn = self._get_submit_btn()
+        self._status_checkbox = self._get_to_status_checkbox()
 
+        self._to_status_flag = False
+
+    def set_text(self, text):
+        self.driver.execute_script("arguments[0].value = arguments[1]", self._comment_field, text)
+
+    def submit(self):
+        self.driver.execute_script("arguments[0].click()", self._submit_btn)
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, self.XPATH))
+        )
+
+    def set_to_status(self, to_status):
+        if to_status == self._to_status_flag:
+            return
+        self._toggle_checkbox()
+        self._to_status_flag = not self._to_status_flag
+
+    def _toggle_checkbox(self):
+        self._status_checkbox.click()
+
+    def _get_to_status_checkbox(self):
+        return self._get_element_by_xpath('.//input[@id="reshare.toStatus"]')
+
+    def _get_submit_btn(self):
+        return self._get_element_by_xpath('.//input[@id="reshare.submit"]')
+
+    def _get_comment_field(self):
+        return self._get_element_by_xpath('.//textarea[@name="any_text_here"]')
