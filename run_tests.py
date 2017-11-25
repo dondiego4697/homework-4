@@ -25,14 +25,14 @@ if __name__ == '__main__':
     # ))
     # result |= unittest.TextTestRunner().run(poll_suite).wasSuccessful()
     #
-    # post_manipulation_suite = unittest.TestSuite((
-    #     unittest.makeSuite(PostManipulationTests),
-    # ))
-    # result |= unittest.TextTestRunner().run(post_manipulation_suite).wasSuccessful()
-
-    reshare_suite = unittest.TestSuite((
-        unittest.makeSuite(ReshareTests),
+    post_manipulation_suite = unittest.TestSuite((
+        unittest.makeSuite(PostManipulationTests),
     ))
-    result |= unittest.TextTestRunner().run(reshare_suite).wasSuccessful()
+    result |= unittest.TextTestRunner().run(post_manipulation_suite).wasSuccessful()
+
+    # reshare_suite = unittest.TestSuite((
+    #     unittest.makeSuite(ReshareTests),
+    # ))
+    # result |= unittest.TextTestRunner().run(reshare_suite).wasSuccessful()
 
     sys.exit(not result)

@@ -4,6 +4,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from tests.Component.Component import Component
+from tests.MainPage.Post.PostFrame import PostFrame
+
+import time
 
 
 class Post(Component):
@@ -14,6 +17,7 @@ class Post(Component):
         self._elem = element
         self._delete_btn = self._get_delete_btn()
         self._reshare_btn = self._get_reshare_btn()
+        self._clickable_post_area = self._get_clickable_post_area()
 
     def delete(self):
         self.driver.execute_script('arguments[0].click()', self._delete_btn)
@@ -75,6 +79,17 @@ class Post(Component):
     def _get_delete_btn(self):
         delete_btn_xpath = './/a[contains(@class, "feed_close")]'
         return self._get_element_by_xpath(delete_btn_xpath, self._elem)
+
+    def _get_clickable_post_area(self):
+        clickable_post_area_xpath = '//a[contains(@class, "media-text_a")]'
+        return self._get_element_by_xpath(clickable_post_area_xpath, self._elem)
+
+    def open_post_frame(self):
+        self._clickable_post_area.click()
+        post_frame_elem = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, PostFrame.XPATH))
+        )
+        return PostFrame(self.driver, post_frame_elem)
 
 
 class VoteVariant(Component):
