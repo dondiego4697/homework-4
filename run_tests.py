@@ -5,6 +5,7 @@ import unittest
 from tests.main import Tests
 from tests.poll_tests import PollTests
 from tests.post_manipulation_tests import PostManipulationTests
+from tests.profile_tests import ProfileTests
 from tests.reshare_tests import ReshareTests
 from tests.status_tests import StatusTests
 from tests.uncategorized_tests import UncategorizedTests
@@ -39,5 +40,10 @@ if __name__ == '__main__':
         unittest.makeSuite(UncategorizedTests),
     ))
     result |= unittest.TextTestRunner().run(uncategorized_suite).wasSuccessful()
+
+    profile_suite = unittest.TestSuite((
+        unittest.makeSuite(ProfileTests),
+    ))
+    result |= unittest.TextTestRunner().run(profile_suite).wasSuccessful()
 
     sys.exit(not result)
