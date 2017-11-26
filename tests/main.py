@@ -30,7 +30,6 @@ class Tests(unittest.TestCase):
             executable_path='/home/shine/FilesRoot/Technopark/3_term/Testing/selenium_tests/homework-4/drivers/linux/chromedriver')
 
         self.authentication()
-        # self.test_smoke_post_page()
 
     def tearDown(self):
         self.driver.quit()

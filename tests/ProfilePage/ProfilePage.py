@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from tests.MainPage.Post.Post import Post
 from tests.Page.Page import Page
 from tests.Component.Component import Component
+from tests.PostPage.Photo.PhotoAlbumsView import PhotoAlbumsView
 
 
 class ProfilePage(Page):
@@ -15,6 +16,50 @@ class ProfilePage(Page):
     def __init__(self, driver, path):
         super(ProfilePage, self).__init__(driver)
         self.PATH = path
+        
+    def get_avatar_change_view(self):
+        avatar_xpath = '//*[@id="viewImageLinkId"]'
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                avatar_xpath
+            ))
+        )
+
+        avatar_change_btn_xpath = '//i[@class="tico_img ic ic_i_mainPhoto"]'
+        avatar_change_btn = self.driver.find_element_by_xpath(avatar_change_btn_xpath)
+        self.driver.execute_script('arguments[0].click()', avatar_change_btn)
+
+        element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                PhotoAlbumsView.XPATH
+            ))
+        )
+
+        return PhotoAlbumsView(self.driver, element)
+
+    def submit_avatar_change(self):
+        avatar_submit_btn_xpath = '//*[@id="hook_FormButton_button_plpscp_confirm"]'
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                avatar_submit_btn_xpath
+            ))
+        ).click()
+
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, avatar_submit_btn_xpath))
+        )
+
+    # Will return name of the group to which the post was reshared. Throws exception otherwise
+    def get_reshared_group_name(self):
+        return WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((
+                By.XPATH,
+                '//div[@id="hook_Block_MiddleColumnTopCard_StatusNew"]//a[@class="group-link o"]'
+            ))
+        ).text
 
     def get_last_post(self):
         element = WebDriverWait(self.driver, 10).until(

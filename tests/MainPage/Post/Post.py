@@ -3,6 +3,8 @@ from selenium.common.exceptions import WebDriverException, TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
+
+from tests.Comments.Discussion import Discussion
 from tests.Component.Component import Component
 from tests.MainPage.Post.PostFrame import PostFrame
 
@@ -14,11 +16,33 @@ class Post(Component):
         super(Post, self).__init__(driver)
         self._elem = element
         self._delete_btn = self._get_delete_btn()
-        self._reshare_btn = self._get_reshare_btn()
         self._clickable_post_area = self._get_clickable_post_area()
+        self._comment_btn = self._get_comment_btn()
+        self._klass_btn = self._get_class_btn()
+        self._reshare_btn = self._get_reshare_btn()
 
     def delete(self):
         self.driver.execute_script('arguments[0].click()', self._delete_btn)
+
+    def open_comments(self):
+        self._comment_btn.click()
+        comment_element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, Discussion.XPATH))
+        )
+        return Discussion(self.driver, comment_element)
+
+    def press_klass(self):
+        self._klass_btn.click()
+
+    def is_not_liked(self):
+        try:
+            liked_xpath = './/div[contains(@class, "widget __compact")]'
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, liked_xpath))
+            )
+            return True
+        except WebDriverException:
+            return False
 
     def is_deleted(self):
         try:
@@ -64,22 +88,13 @@ class Post(Component):
             return True
         except WebDriverException:
             return False
-
-    def get_reshare_panel(self):
-        self._reshare_btn.click()
-        element = self._get_element_by_xpath(ReshareView.XPATH)
-        return ReshareView(self.driver, element)
-
+          
     def open_post_frame(self):
         self._clickable_post_area.click()
         post_frame_elem = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, PostFrame.XPATH))
         )
         return PostFrame(self.driver, post_frame_elem)
-
-    def _get_reshare_btn(self):
-        reshare_btn_xpath = './/button[@class="h-mod widget_cnt" and @data-type="RESHARE"]'
-        return self._get_element_by_xpath(reshare_btn_xpath, self._elem)
 
     def _get_delete_btn(self):
         delete_btn_xpath = './/a[contains(@class, "feed_close")]'
@@ -88,6 +103,28 @@ class Post(Component):
     def _get_clickable_post_area(self):
         clickable_post_area_xpath = '//a[contains(@class, "media-text_a")]'
         return self._get_element_by_xpath(clickable_post_area_xpath, self._elem)
+
+    def _get_comment_btn(self):
+        comment_btn_xpath = './/a[contains(@class, "h-mod widget_cnt")]'
+        return self._get_element_by_xpath(comment_btn_xpath)
+
+    def _get_class_btn(self):
+        comment_btn_xpath = './/button[contains(@class, "h-mod widget_cnt controls-list_lk")]'
+        return self._get_element_by_xpath(comment_btn_xpath)
+      
+    def get_reshare_panel(self):
+        self._reshare_btn.click()
+        element = self._get_element_by_xpath(ReshareView.XPATH)
+        return ReshareView(self.driver, element)
+
+    def _get_reshare_btn(self):
+        reshare_btn_xpath = './/button[@class="h-mod widget_cnt" and @data-type="RESHARE"]'
+        return self._get_element_by_xpath(reshare_btn_xpath, self._elem)
+
+    def _get_delete_btn(self):
+        delete_btn_xpath = './/a[contains(@class, "feed_close")]'
+        return self._get_element_by_xpath(delete_btn_xpath, self._elem)
+      
 
 
 class VoteVariant(Component):
@@ -146,6 +183,20 @@ class ReshareView(Component):
             EC.presence_of_element_located((By.XPATH, ReshareInMessageView.XPATH))
         )
         return ReshareInMessageView(self.driver, elem)
+
+    def share_with_text(self):
+        self._reshare_with_text.click()
+        elem = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, ReshareWithText.XPATH))
+        )
+        return ReshareWithText(self.driver, elem)
+
+    def share_in_group(self):
+        self._reshare_in_group.click()
+        elem = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, ReshareInGroup.XPATH))
+        )
+        return ReshareInGroup(self.driver, elem)
 
     def share_now(self):
         WebDriverWait(self.driver, 0.1).until(
@@ -216,4 +267,86 @@ class ReshareInMessageView(Component):
 
 
 
+class ReshareWithText(Component):
+    XPATH = '//div[@id="reshare"]'
+
+    def __init__(self, driver, element):
+        super(ReshareWithText, self).__init__(driver)
+        self._elem = element
+        self._comment_field = self._get_comment_field()
+        self._submit_btn = self._get_submit_btn()
+        self._status_checkbox = self._get_to_status_checkbox()
+
+        self._to_status_flag = False
+
+    def set_text(self, text):
+        self.driver.execute_script("arguments[0].value = arguments[1]", self._comment_field, text)
+
+    def submit(self):
+        self.driver.execute_script("arguments[0].click()", self._submit_btn)
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, self.XPATH))
+        )
+
+    def set_to_status(self, to_status):
+        if to_status == self._to_status_flag:
+            return
+        self._toggle_checkbox()
+        self._to_status_flag = not self._to_status_flag
+
+    def _toggle_checkbox(self):
+        self._status_checkbox.click()
+
+    def _get_to_status_checkbox(self):
+        return self._get_element_by_xpath('.//input[@id="reshare.toStatus"]')
+
+    def _get_submit_btn(self):
+        return self._get_element_by_xpath('.//input[@id="reshare.submit"]')
+
+    def _get_comment_field(self):
+        return self._get_element_by_xpath('.//textarea[@name="any_text_here"]')
+
+
+class ReshareInGroup(Component):
+    XPATH = './/div[@id="reshare"]'
+
+    def __init__(self, driver, element):
+        super(ReshareInGroup, self).__init__(driver)
+        self._elem = element
+
+        self._comment_field = self._get_comment_field()
+        self._group_field = self._get_group_field()
+        self._share_btn = self._get_share_btn()
+
+    def set_text(self, text):
+        self.driver.execute_script("arguments[0].value = arguments[1]", self._comment_field, text)
+
+    def set_group(self, group_name, group_num=0):
+        self.driver.execute_script("arguments[0].value = arguments[1]", self._group_field, group_name)
+        suggests = self._get_group_suggests()
+        suggests[group_num].click()
+
+    def submit(self):
+        self._share_btn.click()
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, self.XPATH))
+        )
+
+    def _get_comment_field(self):
+        return self._get_element_by_xpath('//*[@id="t.posting_form_text_field"]', self._elem)
+
+    def _get_group_field(self):
+        return self._get_element_by_xpath('.//*[@id="reshare_XpostGroupNameInput"]', self._elem)
+
+    def _get_share_btn(self):
+        return self._get_element_by_xpath('.//*[@id="reshare.submit"]', self._elem)
+
+    def _get_group_suggests(self):
+        return self._get_elements_by_xpath('.//li[contains(@id, "reshare_XpostGroupSuggest")]')
+
+    def _wait_self_loaded(self):
+        super(ReshareInGroup, self)._wait_self_loaded()
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, '//div[contains(@class, "posting-form_overlay")]'))
+        )
 

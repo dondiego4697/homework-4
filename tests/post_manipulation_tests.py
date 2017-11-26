@@ -16,3 +16,4 @@ class PostManipulationTests(Tests):
         post_frame = post.open_post_frame()
         post_frame.add_post_to_bookmarks()
         self.assertTrue(post_frame.is_added_to_bookmarks())
+
