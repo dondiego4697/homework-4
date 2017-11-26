@@ -30,7 +30,7 @@ class Discussion(Component):
 
     def get_ith_comment(self, i):
         comment_xpath = './/div[contains(@class, "d_comment_w d_comment_w__avatar __me show-on-hover")][' + i + ']'
-        comment_element =  WebDriverWait(self.driver, 10).until(
+        comment_element = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, comment_xpath))
         )
         return Comment(self.driver, comment_element)
@@ -40,22 +40,6 @@ class Discussion(Component):
         comment_xpath = './/div[contains(@class, "d_comment_w d_comment_w__avatar __me show-on-hover")]'
         comment_element = self._get_element_by_xpath(comment_xpath)
         return Comment(self.driver, comment_element)
-
-    def get_first_comment_text(self):
-        comment = self.get_first_comment()
-        return comment.get_comment_text()
-
-    def answer_first_comment(self, text):
-        self.get_first_comment().answer_btn_click()
-        self.input_post_text(text)
-
-    def change_comment(self, text):
-        self._wait_self_loaded()
-        comment = self.get_first_comment()
-        comment.change_btn_click()
-        self._wait_self_loaded()
-        self.input_post_text(text)
-
 
     def comment(self):
         self.driver.execute_script('arguments[0].click()', self._comment_btn)
@@ -99,55 +83,6 @@ class Discussion(Component):
         )
         return ConfirmPopup(self.driver, confirm_elem)
 
-    #def open_smile_list(self):
-    #    self._wait_self_loaded()
-    #    self._smiles_btn.click()
-    #    smiles_elem = WebDriverWait(self.driver, 10).until(
-    #        EC.presence_of_element_located((By.XPATH, CommentsFriendsView.XPATH))
-    #    )
-    #    return CommentsFriendsView(self.driver, smiles_elem)
-
-    def _get_delete_btn(self):
-        delete_btn_xpath = './/a[contains(@class, "feed_close")]'
-        return self._get_element_by_xpath(delete_btn_xpath)
-
-    def _get_comment_btn(self):
-        comment_btn_xpath = '//*[@id="ok-e-d_button"]'
-        return WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, comment_btn_xpath))
-        )
-        #return self._get_element_by_xpath(comment_btn_xpath)
-
-    def _get_comment_input_field(self):
-        post_field_xpath = '//*[@id="ok-e-d"]' #disc_text_area_cont_w
-        return self._get_element_by_xpath(post_field_xpath)
-
-    def _get_add_btn(self):
-        add_btn_xpath = '//div[contains(@class, "disc_toolbar_i")][1]'
-        return self._get_element_by_xpath(add_btn_xpath)
-
-    def _get_add_smiles_btn(self):
-        smiles_btn_xpath = '//div[contains(@class, "disc_toolbar_i")][2]'
-        return self._get_element_by_xpath(smiles_btn_xpath)
-
-    def _get_add_video_btn(self):
-        add_video_btn_xpath = '//div[@class="disc_toolbar_i"]//i[contains(@class, "tico_img ic ic_videoattach")]'
-        return self._get_element_by_xpath(add_video_btn_xpath)
-
-    def _get_add_image_btn(self):
-        add_image_btn_xpath = '//div[@class="disc_toolbar_i"]//i[contains(@class, "tico_img ic ic_okphotoattach")]'
-        return self._get_element_by_xpath(add_image_btn_xpath)
-
-    def _get_add_friend_btn(self):
-        add_friend_btn_xpath = '//div[@class="disc_toolbar_i"]//i[contains(@class, "tico_img ic ic_friend")]'
-        return self._get_element_by_xpath(add_friend_btn_xpath)
-
-    def _wait_comment_input_field_invisible(self):
-        post_field_xpath = '//*[@id="ok-e-d"]'
-        WebDriverWait(self.driver, 10).until(
-            EC.invisibility_of_element_located((By.XPATH, post_field_xpath))
-        )
-
     def contains_comments(self):
         try:
             first_comment_xpath = '//*[@id="d-id-cmnt-local--100-rp"]/div[2]'
@@ -181,6 +116,39 @@ class Discussion(Component):
         except WebDriverException:
             return False
 
+    def _get_delete_btn(self):
+        delete_btn_xpath = './/a[contains(@class, "feed_close")]'
+        return self._get_element_by_xpath(delete_btn_xpath)
+
+    def _get_comment_btn(self):
+        comment_btn_xpath = '//div[@class="disc_rich_input_cont"]//div[@class="disc_input_btn"]'
+        return self._get_element_by_xpath(comment_btn_xpath)
+
+    def _get_comment_input_field(self):
+        post_field_xpath = '//*[@id="ok-e-d"]'
+        return self._get_element_by_xpath(post_field_xpath)
+
+    def _get_add_btn(self):
+        add_btn_xpath = '//div[contains(@class, "disc_toolbar_i")][1]'
+        return self._get_element_by_xpath(add_btn_xpath)
+
+    def _get_add_smiles_btn(self):
+        smiles_btn_xpath = '//div[contains(@class, "disc_toolbar_i")][2]'
+        return self._get_element_by_xpath(smiles_btn_xpath)
+
+    def _get_add_video_btn(self):
+        add_video_btn_xpath = '//div[@class="disc_toolbar_i"]//i[contains(@class, "tico_img ic ic_videoattach")]'
+        return self._get_element_by_xpath(add_video_btn_xpath)
+
+    def _get_add_image_btn(self):
+        add_image_btn_xpath = '//div[@class="disc_toolbar_i"]//i[contains(@class, "tico_img ic ic_okphotoattach")]'
+        return self._get_element_by_xpath(add_image_btn_xpath)
+
+    def _get_add_friend_btn(self):
+        add_friend_btn_xpath = '//div[@class="disc_toolbar_i"]//i[contains(@class, "tico_img ic ic_friend")]'
+        return self._get_element_by_xpath(add_friend_btn_xpath)
+
+
 class Comment(Component):
     XPATH = './/div[contains(@class, "d_comment_w d_comment_w__avatar __me show-on-hover")]'
 
@@ -201,6 +169,7 @@ class Comment(Component):
         self.driver.execute_script('arguments[0].click()', self._answer_btn)
 
     def klass_btn_click(self):
+        self._wait_self_loaded()
         self._klass_btn.click()
         #self.driver.execute_script('arguments[0].click()', self._klass_btn)
 
@@ -220,7 +189,7 @@ class Comment(Component):
 
     def is_not_liked(self):
         try:
-            liked_xpath = './/span[contains(@class, "c-orange show-on-hover_a")]'
+            liked_xpath = './/div[@class="disc-comments-w"]//span[contains(@class, "c-orange show-on-hover_a")]'
             WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, liked_xpath))
             )
@@ -238,7 +207,6 @@ class Comment(Component):
 
     def _get_klass_btn(self):
         klass_btn_xpath = './/div[contains(@class, "klass_w")]'
-        # = '//*[@id="d-klass-klass-d-id-cmnt-local--100"]'
         return self._get_element_by_xpath(klass_btn_xpath)
 
     def _get_delete_btn(self):
