@@ -56,9 +56,16 @@ class PostForm(Component):
         )
         self.driver.execute_script('arguments[0].click()', self._share_btn)
         element_to_disappear_xpath = '//div[contains(@class, "media-layer__topic __active __create")]'
-        WebDriverWait(self.driver, 10).until(
-            EC.invisibility_of_element_located((By.XPATH, element_to_disappear_xpath))
-        )
+
+        try:
+            WebDriverWait(self.driver, 10).until(
+                EC.invisibility_of_element_located((By.XPATH, element_to_disappear_xpath))
+            )
+        finally:
+            try:
+                self.close()
+            except Exception:
+                pass
 
     def set_to_status(self, to_status):
         self._wait_self_loaded()
