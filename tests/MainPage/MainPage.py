@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -107,19 +107,33 @@ class MainPage(Page):
         return True
 
     def delete_recommended_friend(self):
-        friend = WebDriverWait(self.driver, 10).until(
+        friend_xpath = '//*[@class = "button-pro __sec __small js-entity-accept"]'
+        WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH,
-                                            '//*[@class = "button-pro __sec __small js-entity-accept"]'))
+                                            friend_xpath))
         )
+        friends = self.driver.find_elements_by_xpath(friend_xpath)
 
         decline_element = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, '//*[@class = "tico_img ic10 ic10_close-g js-entity-decline"]'))
         )
         self.driver.execute_script('arguments[0].click()', decline_element)
 
-        newfriend = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH,
-                                            '//*[@class = "button-pro __sec __small js-entity-accept"]'))
+        WebDriverWait(self.driver, 10).until(
+            WaitItemDecrease(friend_xpath, len(friends), self.driver)
         )
+        return True
 
-        return friend.get_attribute("id") != newfriend.get_attribute("id")
+
+class WaitItemDecrease(object):
+    def __init__(self, xpath, init_cnt, driver):
+        self._xpath = xpath
+        self._init_cnt = init_cnt
+        self._driver = driver
+
+    def __call__(self, *args, **kwargs):
+        try:
+            cnt = len(self._driver.find_elements_by_xpath(self._xpath))
+            return cnt != self._init_cnt - 1
+        except StaleElementReferenceException:
+            return False
