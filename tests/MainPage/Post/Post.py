@@ -72,6 +72,13 @@ class Post(Component):
         element = self._get_element_by_xpath(ReshareView.XPATH)
         return ReshareView(self.driver, element)
 
+    def open_post_frame(self):
+        self._clickable_post_area.click()
+        post_frame_elem = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, PostFrame.XPATH))
+        )
+        return PostFrame(self.driver, post_frame_elem)
+
     def _get_reshare_btn(self):
         reshare_btn_xpath = './/button[@class="h-mod widget_cnt" and @data-type="RESHARE"]'
         return self._get_element_by_xpath(reshare_btn_xpath, self._elem)
@@ -83,13 +90,6 @@ class Post(Component):
     def _get_clickable_post_area(self):
         clickable_post_area_xpath = '//a[contains(@class, "media-text_a")]'
         return self._get_element_by_xpath(clickable_post_area_xpath, self._elem)
-
-    def open_post_frame(self):
-        self._clickable_post_area.click()
-        post_frame_elem = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, PostFrame.XPATH))
-        )
-        return PostFrame(self.driver, post_frame_elem)
 
 
 class VoteVariant(Component):
