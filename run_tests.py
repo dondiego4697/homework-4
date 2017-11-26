@@ -8,6 +8,7 @@ from tests.post_manipulation_tests import PostManipulationTests
 from tests.reshare_tests import ReshareTests
 from tests.status_tests import StatusTests
 from tests.forum_comments_tests import ForumCommentsTests
+from tests.about_info_tests import AboutInfoTests
 
 if __name__ == '__main__':
     result = False
@@ -35,10 +36,15 @@ if __name__ == '__main__':
     #     unittest.makeSuite(ReshareTests),
     # ))
     # result |= unittest.TextTestRunner().run(reshare_suite).wasSuccessful()
+    #
+    # forum_comments_suite = unittest.TestSuite((
+    #     unittest.makeSuite(ForumCommentsTests),
+    # ))
+    # result |= unittest.TextTestRunner().run(forum_comments_suite).wasSuccessful()
 
-    forum_comments_suite = unittest.TestSuite((
-        unittest.makeSuite(ForumCommentsTests),
+    about_info_suite = unittest.TestSuite((
+        unittest.makeSuite(AboutInfoTests),
     ))
-    result |= unittest.TextTestRunner().run(forum_comments_suite).wasSuccessful()
+    result |= unittest.TextTestRunner().run(about_info_suite).wasSuccessful()
 
     sys.exit(not result)

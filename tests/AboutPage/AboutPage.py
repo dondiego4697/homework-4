@@ -6,13 +6,15 @@ from selenium.webdriver.common.by import By
 
 from tests.Page.Page import Page
 from tests.ForumPage.ForumComponent import ForumComponent
+from tests.AboutPage.AboutInfoComponent import AboutInfoComponent
 
 
-class ForumPage(Page):
-    PATH = 'profile/589325601321/forum'
+class AboutPage(Page):
+    PATH = 'profile/589325601321/about'
 
-    def get_forum_component(self):
+    def get_about_info_component(self):
         element = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, ForumComponent.XPATH))
+            EC.presence_of_element_located((By.XPATH, AboutInfoComponent.XPATH))
         )
-        return ForumComponent(self.driver, element)
+        return AboutInfoComponent(self.driver, element)
+

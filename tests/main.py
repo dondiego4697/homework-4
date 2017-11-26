@@ -10,6 +10,7 @@ from tests.AuthPage.AuthPage import AuthPage
 from tests.MainPage.MainPage import MainPage
 from tests.PostPage.PostPage import PostPage
 from tests.ForumPage.ForumPage import ForumPage
+from tests.AboutPage.AboutPage import AboutPage
 from tests.TapePage.TapePage import TapePage
 
 
@@ -71,6 +72,11 @@ class Tests(unittest.TestCase):
         forum_page = ForumPage(self.driver)
         forum_page.open()
         return forum_page
+
+    def _to_about_page(self):
+        about_page = AboutPage(self.driver)
+        about_page.open()
+        return about_page
 
     def _post_string(self, msg, to_status):
         post_page = PostPage(self.driver)
