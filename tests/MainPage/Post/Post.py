@@ -174,8 +174,11 @@ class ReshareView(Component):
         return ReshareWithText(self.driver, elem)
 
     def share_in_group(self):
-        self._reshare_in_group.click()
-        elem = self._get_element_by_xpath(ReshareInGroup.XPATH, self._elem)
+        self.driver.execute_script('arguments[0].click()', self._reshare_in_group)
+
+        elem = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, ReshareInGroup.XPATH))
+        )
         return ReshareInGroup(self.driver, elem)
 
     def share_now(self):
@@ -300,10 +303,10 @@ class ReshareInGroup(Component):
     def set_text(self, text):
         self.driver.execute_script("arguments[0].value = arguments[1]", self._comment_field, text)
 
-    def set_group(self, group_name, group_num=0):
+    def set_group(self, group_name):
         self.driver.execute_script("arguments[0].value = arguments[1]", self._group_field, group_name)
         suggests = self._get_group_suggests()
-        suggests[group_num].click()
+        [suggest for suggest in suggests if suggest.text == group_name][0].click()
 
     def submit(self):
         self._share_btn.click()
