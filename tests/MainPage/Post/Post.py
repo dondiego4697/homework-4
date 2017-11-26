@@ -165,12 +165,16 @@ class ReshareView(Component):
 
     def share_in_message(self):
         self._reshare_in_msg.click()
-        elem = self._get_element_by_xpath(ReshareInMessageView.XPATH, self._elem)
+        elem = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, ReshareInMessageView.XPATH))
+        )
         return ReshareInMessageView(self.driver, elem)
 
     def share_with_text(self):
         self._reshare_with_text.click()
-        elem = self._get_element_by_xpath(ReshareWithText.XPATH, self._elem)
+        elem = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, ReshareWithText.XPATH))
+        )
         return ReshareWithText(self.driver, elem)
 
     def share_in_group(self):
