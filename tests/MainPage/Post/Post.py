@@ -257,13 +257,10 @@ class ReshareInMessageView(Component):
         self._get_friend_options()[friend_num].click()
 
     def submit(self):
-        def inner_submit():
-            self._submit_btn.click()
-            WebDriverWait(self.driver, 10).until(
-                EC.invisibility_of_element_located((By.XPATH, self.XPATH))
-            )
-
-        retry_times(inner_submit, 2)
+        self._submit_btn.click()
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, self.XPATH))
+        )
 
     def visible(self):
         return self._elem.is_displayed()
