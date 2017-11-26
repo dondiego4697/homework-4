@@ -45,7 +45,7 @@ if __name__ == '__main__':
     poll_suite = unittest.TestSuite((
         unittest.makeSuite(PollTests)
     ))
-    result |= unittest.TextTestRunner().run(reshare_suite).wasSuccessful()
+    result |= unittest.TextTestRunner().run(poll_suite).wasSuccessful()
 
     forum_comments_suite = unittest.TestSuite((
         unittest.makeSuite(ForumCommentsTests),
