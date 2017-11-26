@@ -50,3 +50,4 @@ class ReshareTests(Tests):
         reshare_in_group.submit()
         got_group_name = profile_page.get_reshared_group_name()
         self.assertEqual(group_name, got_group_name)
+
