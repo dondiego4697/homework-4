@@ -57,4 +57,5 @@ class StatusTests(Tests):
 
         profile_page = self._to_profile_page()
         status = profile_page.get_status()
+
         self.assertTrue(status.contains_music())

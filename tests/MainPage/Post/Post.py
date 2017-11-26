@@ -3,6 +3,8 @@ from selenium.common.exceptions import WebDriverException, TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
+
+from tests.Comments.Discussion import Discussion
 from tests.Component.Component import Component
 
 
@@ -13,10 +15,32 @@ class Post(Component):
         super(Post, self).__init__(driver)
         self._elem = element
         self._delete_btn = self._get_delete_btn()
+        self._comment_btn = self._get_comment_btn()
+        self._klass_btn = self._get_class_btn()
         self._reshare_btn = self._get_reshare_btn()
 
     def delete(self):
         self.driver.execute_script('arguments[0].click()', self._delete_btn)
+
+    def open_comments(self):
+        self._comment_btn.click()
+        comment_element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, Discussion.XPATH))
+        )
+        return Discussion(self.driver, comment_element)
+
+    def press_klass(self):
+        self._klass_btn.click()
+
+    def is_not_liked(self):
+        try:
+            liked_xpath = './/div[contains(@class, "widget __compact")]'
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, liked_xpath))
+            )
+            return True
+        except WebDriverException:
+            return False
 
     def is_deleted(self):
         try:
@@ -62,7 +86,18 @@ class Post(Component):
             return True
         except WebDriverException:
             return False
+    def _get_delete_btn(self):
+        delete_btn_xpath = './/a[contains(@class, "feed_close")]'
+        return self._get_element_by_xpath(delete_btn_xpath)
 
+    def _get_comment_btn(self):
+        comment_btn_xpath = './/a[contains(@class, "h-mod widget_cnt")]'
+        return self._get_element_by_xpath(comment_btn_xpath)
+
+    def _get_class_btn(self):
+        comment_btn_xpath = './/button[contains(@class, "h-mod widget_cnt controls-list_lk")]'
+        return self._get_element_by_xpath(comment_btn_xpath)
+      
     def get_reshare_panel(self):
         self._reshare_btn.click()
         element = self._get_element_by_xpath(ReshareView.XPATH)
@@ -75,6 +110,7 @@ class Post(Component):
     def _get_delete_btn(self):
         delete_btn_xpath = './/a[contains(@class, "feed_close")]'
         return self._get_element_by_xpath(delete_btn_xpath, self._elem)
+      
 
 
 class VoteVariant(Component):

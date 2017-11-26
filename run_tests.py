@@ -10,12 +10,22 @@ from tests.reshare_tests import ReshareTests
 from tests.status_tests import StatusTests
 from tests.uncategorized_tests import UncategorizedTests
 
+from tests.comment_tests import CommentTests
+from tests.main import Tests
+from tests.poll_tests import PollTests
+from tests.status_tests import StatusTests
+
 if __name__ == '__main__':
     result = False
     suite = unittest.TestSuite((
         unittest.makeSuite(Tests),
     ))
     result |= unittest.TextTestRunner().run(suite).wasSuccessful()
+
+    comment_suite = unittest.TestSuite((
+        unittest.makeSuite(CommentTests)
+    ))
+    result |= unittest.TextTestRunner().run(comment_suite).wasSuccessful()
 
     status_suite = unittest.TestSuite((
         unittest.makeSuite(StatusTests),

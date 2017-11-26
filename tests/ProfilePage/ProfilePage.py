@@ -16,7 +16,7 @@ class ProfilePage(Page):
     def __init__(self, driver, path):
         super(ProfilePage, self).__init__(driver)
         self.PATH = path
-
+        
     def get_avatar_change_view(self):
         avatar_xpath = '//*[@id="viewImageLinkId"]'
         WebDriverWait(self.driver, 10).until(

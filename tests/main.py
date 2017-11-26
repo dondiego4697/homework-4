@@ -36,7 +36,7 @@ class Tests(unittest.TestCase):
         auth_form.set_login(self.USERNAME)
         auth_form.set_password(self.PASSWORD)
         auth_form.submit()
-
+        
     # denstep Проверить возможность пожаловаться на пост в группе
     # def test_ability_to_complain_on_group_post(self):
     # 	tape_page = TapePage(self.driver)
