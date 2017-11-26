@@ -4,6 +4,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 
 from tests.MainPage.Post.Post import Post
+from tests.MainPage.Post.GroupPost import GroupPost
 from tests.Page.Page import Page
 from tests.ProfilePage.ProfilePage import ProfilePage
 
@@ -25,6 +26,12 @@ class MainPage(Page):
             EC.presence_of_element_located((By.XPATH, Post.XPATH))
         )
         return Post(self.driver, element)
+
+    def get_last_group_post(self):
+        element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, GroupPost.XPATH))
+        )
+        return GroupPost(self.driver, element)
 
 
 

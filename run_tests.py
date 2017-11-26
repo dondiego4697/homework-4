@@ -26,11 +26,11 @@ if __name__ == '__main__':
     #     unittest.makeSuite(PollTests),
     # ))
     # result |= unittest.TextTestRunner().run(poll_suite).wasSuccessful()
-    #
-    # post_manipulation_suite = unittest.TestSuite((
-    #     unittest.makeSuite(PostManipulationTests),
-    # ))
-    # result |= unittest.TextTestRunner().run(post_manipulation_suite).wasSuccessful()
+
+    post_manipulation_suite = unittest.TestSuite((
+        unittest.makeSuite(PostManipulationTests),
+    ))
+    result |= unittest.TextTestRunner().run(post_manipulation_suite).wasSuccessful()
 
     # reshare_suite = unittest.TestSuite((
     #     unittest.makeSuite(ReshareTests),
@@ -41,10 +41,10 @@ if __name__ == '__main__':
     #     unittest.makeSuite(ForumCommentsTests),
     # ))
     # result |= unittest.TextTestRunner().run(forum_comments_suite).wasSuccessful()
-
-    about_info_suite = unittest.TestSuite((
-        unittest.makeSuite(AboutInfoTests),
-    ))
-    result |= unittest.TextTestRunner().run(about_info_suite).wasSuccessful()
+    #
+    # about_info_suite = unittest.TestSuite((
+    #     unittest.makeSuite(AboutInfoTests),
+    # ))
+    # result |= unittest.TextTestRunner().run(about_info_suite).wasSuccessful()
 
     sys.exit(not result)
