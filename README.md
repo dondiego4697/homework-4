@@ -17,7 +17,6 @@ pip install -U selenium
 make set-os-<имя операционой системы (linux | macos | win)>
 make set-env
 python test_area.py
-
 ```
 
 Чтобы запустить grid

@@ -1,4 +1,3 @@
-
 set-os-linux:
 	export OS_NAME=linux
 

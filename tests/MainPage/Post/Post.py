@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from selenium.common.exceptions import WebDriverException, TimeoutException
+from selenium.common.exceptions import WebDriverException, TimeoutException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -118,8 +118,11 @@ class Post(Component):
         return ReshareView(self.driver, element)
 
     def _get_reshare_btn(self):
-        reshare_btn_xpath = './/button[@class="h-mod widget_cnt" and @data-type="RESHARE"]'
-        return self._get_element_by_xpath(reshare_btn_xpath, self._elem)
+        try:
+            reshare_btn_xpath = './/button[@class="h-mod widget_cnt" and @data-type="RESHARE"]'
+            return self._get_element_by_xpath(reshare_btn_xpath, self._elem)
+        except NoSuchElementException:
+            return False
 
     def _get_delete_btn(self):
         delete_btn_xpath = './/a[contains(@class, "feed_close")]'

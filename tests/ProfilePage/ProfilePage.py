@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -72,6 +73,46 @@ class ProfilePage(Page):
             EC.presence_of_element_located((By.XPATH, Status.XPATH))
         )
         return Status(self.driver, element)
+
+    def get_photo_btn(self):
+        btn_path = './/a[@class="add-stub al add-stub__hor __grayed"]'
+        element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, btn_path))
+        )
+        return element
+
+    def upload_photo(self):
+        file_input_xpath = '//span[@class="html5-link_w js-fileapi-wrapper"]//input[@name="photo"]'
+        element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, file_input_xpath))
+        )
+        element.send_keys(os.getcwd() + '/res/7532.jpg')
+
+        file_result_xpath = '//li[@id="uploadingCompleteMsg"]//span[@class="tico c-green"]//div[' \
+                            '@class="js-show-controls"]'
+        element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, file_result_xpath))
+        )
+        return element
+
+    def upload_video(self):
+        file_input_xpath = '//span[@class="h-mod pform_ac pf-video-button"]//input[@name="videos"]'
+        element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, file_input_xpath))
+        )
+        element.send_keys(os.getcwd() + '/res/cat_nigga.mp4')
+
+        # progress_tx ellip __ulc-done span.v-upl-card_pb_count
+
+        file_result_xpath = '//div[@class="progress_tx ellip __ulc-done"]'
+
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, file_result_xpath))
+        )
+
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, file_result_xpath))
+        )
 
 
 class Status(Component):
