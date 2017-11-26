@@ -54,7 +54,7 @@ class CommentTests(Tests):
         comments.comment()
         comment = comments.get_first_comment()
         comment.klass_btn_click()
-        self.assertTrue(comment.is_not_liked())
+        self.assertTrue(comment.is_liked())
 
     def test_unlike_comment(self):
         comments = self._create_post_and_open_comments()
@@ -64,7 +64,7 @@ class CommentTests(Tests):
         comment = comments.get_first_comment()
         comment.klass_btn_click()
         comment.klass_btn_click()
-        self.assertTrue(not comment.is_not_liked())
+        self.assertTrue(comment.is_not_liked())
 
     def test_delete_comment(self):
         comments = self._create_post_and_open_comments()

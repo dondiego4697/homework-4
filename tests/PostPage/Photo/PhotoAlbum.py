@@ -33,7 +33,7 @@ class PhotoAlbumView(Component):
 
     def _get_first_photo(self):
         self._wait_self_loaded()
-        photo_xpath = '//img[@class = "photo-crop_img"]'
+        photo_xpath = '//span[@class="selectable-card_ovr"]'
         return WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, photo_xpath))
         )

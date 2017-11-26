@@ -171,7 +171,7 @@ class Comment(Component):
     def klass_btn_click(self):
         self._wait_self_loaded()
         self._klass_btn.click()
-        #self.driver.execute_script('arguments[0].click()', self._klass_btn)
+        self._wait_self_loaded()
 
     def delete_btn_click(self):
         self.driver.execute_script('arguments[0].click()', self._delete_btn)
@@ -189,7 +189,17 @@ class Comment(Component):
 
     def is_not_liked(self):
         try:
-            liked_xpath = './/div[@class="disc-comments-w"]//span[contains(@class, "c-orange show-on-hover_a")]'
+            liked_xpath = './/div[@class="disc-comments-w"]//a[contains(@uid, "uid-cmnt-klass")]'
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, liked_xpath))
+            )
+            return True
+        except WebDriverException:
+            return False
+
+    def is_liked(self):
+        try:
+            liked_xpath = './/div[@class="disc-comments-w"]//a[contains(@uid, "uid-cmnt-unklass")]'
             WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, liked_xpath))
             )
@@ -206,7 +216,7 @@ class Comment(Component):
         return self._get_element_by_xpath(answer_btn_xpath)
 
     def _get_klass_btn(self):
-        klass_btn_xpath = './/div[contains(@class, "klass_w")]'
+        klass_btn_xpath = './/div[contains(@class, "d_comment_w d_comment_w__avatar __me show-on-hover")]//div[contains(@class, "klass_w")]' #'.//div[contains(@class, "klass_w")]'
         return self._get_element_by_xpath(klass_btn_xpath)
 
     def _get_delete_btn(self):
