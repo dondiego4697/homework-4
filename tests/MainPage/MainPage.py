@@ -73,3 +73,52 @@ class MainPage(Page):
         return WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, '//span[@class="pform_ac __feeling"]'))
         )
+
+    def add_recommended_friend(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "button-pro __sec __small js-entity-accept"))
+        ).click()
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "entity-item_status __success lstp-t ellip"))
+        )
+        return True
+
+    def add_recommended_group(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH,
+                                            '//div[@class="caption"]//div'
+                                            '//div[@class="hookBlock join-group-link js-groupJoinButton"]//a['
+                                            '@class="al"]'))
+        ).click()
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//span[@class="tico c-green join-group-result"]'))
+        )
+        return True
+
+    def delete_recommended_group(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME,
+                                            'recommended-group_close foh-s'))
+        ).click()
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'recommended-group_stub_tx'))
+        )
+        return True
+
+    def delete_recommended_friend(self):
+        friend = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME,
+                                            'button-pro __sec __small js-entity-accept'))
+        )
+
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'tico_img ic10 ic10_close-g js-entity-decline'))
+        ).click()
+
+        newfriend = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME,
+                                            'button-pro __sec __small js-entity-accept'))
+        )
+
+        return friend.get_attribute("id") != newfriend.get_attribute("id")
+

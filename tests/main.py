@@ -4,6 +4,8 @@ import os
 import unittest
 
 from selenium.webdriver import DesiredCapabilities, Remote
+from selenium import webdriver
+import selenium.webdriver.chrome.service as service
 
 from tests.AuthPage.AuthPage import AuthPage
 from tests.MainPage.MainPage import MainPage
@@ -16,12 +18,14 @@ class Tests(unittest.TestCase):
     PASSWORD = u'qweasdzxc123'
 
     def setUp(self):
-        browser = os.environ.get('BROWSER', 'CHROME')
-
+        service = webdriver.chrome.service.Service('/home/andrey/Загрузки/chromedriver')
+        service.start()
         self.driver = Remote(
-            command_executor='http://127.0.0.1:4444/wd/hub',
-            desired_capabilities=getattr(DesiredCapabilities, browser).copy()
+            #command_executor='http://127.0.0.1:4444/wd/hub',
+            command_executor=service.service_url,
+            desired_capabilities=DesiredCapabilities.CHROME
         )
+        #desired_capabilities=getattr(DesiredCapabilities, browser).copy()
 
         self.authentication()
 

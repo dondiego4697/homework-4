@@ -2,6 +2,7 @@
 from selenium.common.exceptions import WebDriverException
 
 from tests.PostPage.PostPage import PostPage
+from tests.MainPage.MainPage import MainPage
 from tests.main import Tests
 
 
@@ -59,3 +60,19 @@ class StatusTests(Tests):
         status = profile_page.get_status()
 
         self.assertTrue(status.contains_music())
+
+    def test_add_recommended_friend(self):
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.add_recommended_friend())
+
+    def test_add_recommended_group(self):
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.add_recommended_group())
+
+    def test_delete_recommended_group(self):
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.delete_recommended_group())
+
+    def test_delete_recommended_friend(self):
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.delete_recommended_friend())
