@@ -59,3 +59,18 @@ class StatusTests(Tests):
 
         self.assertTrue(status.contains_music())
 
+    def test_add_recommended_friend(self):
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.add_recommended_friend())
+
+    def test_add_recommended_group(self):
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.add_recommended_group())
+
+    def test_delete_recommended_group(self):
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.delete_recommended_group())
+
+    def test_delete_recommended_friend(self):
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.delete_recommended_friend())
