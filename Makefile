@@ -5,9 +5,6 @@ set-os-linux:
 set-os-macos:
 	export OS_NAME=macos
 
-set-os-win:
-	export OS_NAME=windows
-
 set-env:
 	export BROWSER_DRIVERS=$(PWD)/drivers/${OS_NAME} && export LOGIN=${LOGIN} && export PASS=${PASS}
 
