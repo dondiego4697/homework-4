@@ -6,8 +6,6 @@ from selenium.webdriver.common.by import By
 from tests.Component.Component import Component
 from tests.MainPage.Post.PostFrame import PostFrame
 
-import time
-
 
 class Post(Component):
     XPATH = '//div[contains(@class, "feed-w")]'

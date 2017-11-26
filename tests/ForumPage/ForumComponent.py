@@ -52,6 +52,15 @@ class DiscussionFrame(Component):
         self._add_comment_btn = self._get_add_comment_btn()
         self._close_btn = self._get_close_btn()
 
+    def write_comment(self, msg):
+        self._comment_input.send_keys(msg)
+
+    def add_comment(self):
+        self._add_comment_btn.click()
+
+    def close(self):
+        self._close_btn.click()
+
     def _get_comment_input(self):
         comment_input_xpath = '//div[contains(@class, "ok-e")]'
         return self._get_element_by_xpath(comment_input_xpath)
@@ -63,15 +72,6 @@ class DiscussionFrame(Component):
     def _get_close_btn(self):
         close_btn_xpath = '//span[contains(@class, "mdialog_disc_controls_close")]'
         return self._get_element_by_xpath(close_btn_xpath)
-
-    def write_comment(self, msg):
-        self._comment_input.send_keys(msg)
-
-    def add_comment(self):
-        self._add_comment_btn.click()
-
-    def close(self):
-        self._close_btn.click()
 
 
 class CommentDeleteFrame(Component):

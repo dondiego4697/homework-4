@@ -2,7 +2,6 @@
 
 from tests.main import Tests
 
-import time
 
 class AboutInfoTests(Tests):
     NAME = 'testName'
@@ -14,7 +13,6 @@ class AboutInfoTests(Tests):
     CITY_LIPETSK_RUS = 'Липецк'
     CITY_MOSCOW_RUS = 'Москва'
     MUSIC = 'latina'
-
 
     def test_change_name(self):
         about_page = self._to_about_page()

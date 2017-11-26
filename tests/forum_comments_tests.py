@@ -47,4 +47,3 @@ class ForumCommentsTests(Tests):
         forum_component = forum_page.get_forum_component()
         text_from_last_comment = forum_component.get_last_comment_text()
         self.assertNotEqual(text_from_last_comment, self.MSG3)
-

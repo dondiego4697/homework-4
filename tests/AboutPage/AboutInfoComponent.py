@@ -8,8 +8,6 @@ from selenium.webdriver.support.ui import Select
 
 from tests.Component.Component import Component
 
-import time
-
 
 class AboutInfoComponent(Component):
     XPATH = '//div[contains(@class, "wide-profile")]'
@@ -150,6 +148,9 @@ class FavouriteMusicSection(Component):
         actions = ActionChains(self.driver)
         actions.move_to_element(del_btn).click().perform()
 
+    def get_last_added_music_string(self):
+        return self._get_last_added_music().text
+
     def _get_music_input_field(self):
         input_xpath = '//div[contains(@id, "_intSuggCntMusic")]'
         return self._get_element_by_xpath(input_xpath)
@@ -161,12 +162,3 @@ class FavouriteMusicSection(Component):
     def _get_last_added_music(self):
         music_xpath = '//ul[contains(@class, "interests_ul")]/li[1]/a'
         return self._get_element_by_xpath(music_xpath)
-
-    def get_last_added_music_string(self):
-        return self._get_last_added_music().text
-
-
-
-
-
-

@@ -5,7 +5,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 
 from tests.Page.Page import Page
-from tests.ForumPage.ForumComponent import ForumComponent
 from tests.AboutPage.AboutInfoComponent import AboutInfoComponent
 
 
@@ -17,4 +16,3 @@ class AboutPage(Page):
             EC.presence_of_element_located((By.XPATH, AboutInfoComponent.XPATH))
         )
         return AboutInfoComponent(self.driver, element)
-
