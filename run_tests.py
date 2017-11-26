@@ -7,6 +7,7 @@ from tests.poll_tests import PollTests
 from tests.post_manipulation_tests import PostManipulationTests
 from tests.reshare_tests import ReshareTests
 from tests.status_tests import StatusTests
+from tests.forum_comments_tests import ForumCommentsTests
 
 if __name__ == '__main__':
     result = False
@@ -25,14 +26,19 @@ if __name__ == '__main__':
     # ))
     # result |= unittest.TextTestRunner().run(poll_suite).wasSuccessful()
     #
-    post_manipulation_suite = unittest.TestSuite((
-        unittest.makeSuite(PostManipulationTests),
-    ))
-    result |= unittest.TextTestRunner().run(post_manipulation_suite).wasSuccessful()
+    # post_manipulation_suite = unittest.TestSuite((
+    #     unittest.makeSuite(PostManipulationTests),
+    # ))
+    # result |= unittest.TextTestRunner().run(post_manipulation_suite).wasSuccessful()
 
     # reshare_suite = unittest.TestSuite((
     #     unittest.makeSuite(ReshareTests),
     # ))
     # result |= unittest.TextTestRunner().run(reshare_suite).wasSuccessful()
+
+    forum_comments_suite = unittest.TestSuite((
+        unittest.makeSuite(ForumCommentsTests),
+    ))
+    result |= unittest.TextTestRunner().run(forum_comments_suite).wasSuccessful()
 
     sys.exit(not result)

@@ -9,6 +9,7 @@ from selenium import webdriver
 from tests.AuthPage.AuthPage import AuthPage
 from tests.MainPage.MainPage import MainPage
 from tests.PostPage.PostPage import PostPage
+from tests.ForumPage.ForumPage import ForumPage
 from tests.TapePage.TapePage import TapePage
 
 
@@ -65,6 +66,11 @@ class Tests(unittest.TestCase):
         profile_page = main_page.get_profile_page()
         profile_page.open()
         return profile_page
+
+    def _to_forum_page(self):
+        forum_page = ForumPage(self.driver)
+        forum_page.open()
+        return forum_page
 
     def _post_string(self, msg, to_status):
         post_page = PostPage(self.driver)
