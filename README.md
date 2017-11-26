@@ -48,3 +48,7 @@ make node
 make run-tests
 
 ```
+
+Криды тестового аккаунта (установить переменные окружения перед запуском):
+    USERNAME=technopark19
+    PASSWORD=qweasdzxc123
