@@ -3,8 +3,6 @@
 import sys
 import unittest
 
-from tests.comment_tests import CommentTests
-from tests.main import Tests
 from tests.poll_tests import PollTests
 from tests.post_manipulation_tests import PostManipulationTests
 from tests.profile_tests import ProfileTests

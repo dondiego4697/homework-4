@@ -7,7 +7,6 @@ from tests.main import Tests
 
 class StatusTests(Tests):
     def test_post_to_status(self):
-        # добавить проверку, что этот статус уже не стоит
         post_msg = "Hello"
         self._post_string(post_msg, True)
 
