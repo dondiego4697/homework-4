@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from tests.Component.Component import Component
 from tests.PostPage.Photo.PhotoAlbum import PhotoAlbumView
+from tests.PostPage.Photo.PhotoView import Photo
 
 
 class PhotoAlbumsView(Component):
@@ -14,6 +15,15 @@ class PhotoAlbumsView(Component):
         super(PhotoAlbumsView, self).__init__(driver)
         self._elem = elem
         self._first_album_cover = self._get_first_album_cover()
+
+    def get_all_photos(self):
+        return [Photo(self.driver, elem) for elem in self._get_elements_by_xpath(Photo.XPATH, self._elem)]
+
+    def get_selected_photos(self):
+        return [photo for photo in self.get_all_photos() if photo.is_selected()]
+
+    def get_not_selected_photos(self):
+        return [photo for photo in self.get_all_photos() if not photo.is_selected()]
 
     def open_first_album(self):
         WebDriverWait(self.driver, 10).until(
