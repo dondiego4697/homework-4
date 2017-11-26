@@ -86,6 +86,7 @@ class Post(Component):
             return True
         except WebDriverException:
             return False
+
     def _get_delete_btn(self):
         delete_btn_xpath = './/a[contains(@class, "feed_close")]'
         return self._get_element_by_xpath(delete_btn_xpath)
@@ -97,7 +98,7 @@ class Post(Component):
     def _get_class_btn(self):
         comment_btn_xpath = './/button[contains(@class, "h-mod widget_cnt controls-list_lk")]'
         return self._get_element_by_xpath(comment_btn_xpath)
-      
+
     def get_reshare_panel(self):
         self._reshare_btn.click()
         element = self._get_element_by_xpath(ReshareView.XPATH)
@@ -110,7 +111,6 @@ class Post(Component):
     def _get_delete_btn(self):
         delete_btn_xpath = './/a[contains(@class, "feed_close")]'
         return self._get_element_by_xpath(delete_btn_xpath, self._elem)
-      
 
 
 class VoteVariant(Component):
@@ -165,23 +165,17 @@ class ReshareView(Component):
 
     def share_in_message(self):
         self._reshare_in_msg.click()
-        elem = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, ReshareInMessageView.XPATH))
-        )
+        elem = self._get_element_by_xpath(ReshareInMessageView.XPATH, self._elem)
         return ReshareInMessageView(self.driver, elem)
 
     def share_with_text(self):
         self._reshare_with_text.click()
-        elem = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, ReshareWithText.XPATH))
-        )
+        elem = self._get_element_by_xpath(ReshareWithText.XPATH, self._elem)
         return ReshareWithText(self.driver, elem)
 
     def share_in_group(self):
         self._reshare_in_group.click()
-        elem = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, ReshareInGroup.XPATH))
-        )
+        elem = self._get_element_by_xpath(ReshareInGroup.XPATH, self._elem)
         return ReshareInGroup(self.driver, elem)
 
     def share_now(self):
