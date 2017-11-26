@@ -41,12 +41,13 @@ class ProfilePage(Page):
 
     def submit_avatar_change(self):
         avatar_submit_btn_xpath = '//*[@id="hook_FormButton_button_plpscp_confirm"]'
-        WebDriverWait(self.driver, 10).until(
+        submit_avatar_btn = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((
                 By.XPATH,
                 avatar_submit_btn_xpath
             ))
-        ).click()
+        )
+        self.driver.execute_script('arguments[0].click()', submit_avatar_btn)
 
         WebDriverWait(self.driver, 10).until(
             EC.invisibility_of_element_located((By.XPATH, avatar_submit_btn_xpath))
