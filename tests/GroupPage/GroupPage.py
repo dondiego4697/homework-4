@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-import time
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 from tests.Component.Component import Component
 from tests.Page.Page import Page
@@ -16,31 +15,23 @@ class GroupPage(Page):
 
     def open_first_post(self):
         first_post = 'xpath=(.//div[@data-l="t,.c"])'
-        try:
-            element = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_element_located(first_post)
-            )
-            element.click()
-        finally:
-            return GroupPostForm(self.driver)
+        element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(first_post)
+        )
+        element.click()
+        return GroupPostForm(self.driver)
 
     def get_posts(self):
-        global elements
-        try:
-            elements = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_all_elements_located((By.CLASS_NAME, 'feed-w'))
-            )
-        finally:
-            return elements
+        elements = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_all_elements_located((By.CLASS_NAME, 'feed-w'))
+        )
+        return elements
 
     def get_group_feeds(self):
-        global elements
-        try:
-            elements = WebDriverWait(self.driver, 10).until(
-                EC.presence_of_all_elements_located((By.CLASS_NAME, 'group-feed'))
-            )
-        finally:
-            return elements
+        elements = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_all_elements_located((By.CLASS_NAME, 'group-feed'))
+        )
+        return elements
 
 
 class GroupPostForm(Component):
