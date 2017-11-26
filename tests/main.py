@@ -15,19 +15,16 @@ from tests.TapePage.TapePage import TapePage
 
 
 class Tests(unittest.TestCase):
-    USERNAME = u'technopark19'
-    PASSWORD = u'qweasdzxc123'
+    USERNAME = os.environ.get('USERNAME')
+    PASSWORD = os.environ.get('PASSWORD')
 
     def setUp(self):
         browser = os.environ.get('BROWSER', 'CHROME')
 
-        # self.driver = Remote(
-        #     command_executor='http://127.0.0.1:4444/wd/hub',
-        #     desired_capabilities=getattr(DesiredCapabilities, browser).copy()
-        # )
-
-        self.driver = webdriver.Chrome(
-            executable_path='/home/shine/FilesRoot/Technopark/3_term/Testing/selenium_tests/homework-4/drivers/linux/chromedriver')
+        self.driver = Remote(
+            command_executor='http://127.0.0.1:4444/wd/hub',
+            desired_capabilities=getattr(DesiredCapabilities, browser).copy()
+        )
 
         self.authentication()
 
