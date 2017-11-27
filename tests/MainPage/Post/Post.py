@@ -49,7 +49,6 @@ class Post(Component):
 
     def press_klass(self):
         self.driver.execute_script('arguments[0].click()', self._klass_btn)
-        #self._klass_btn.click()
 
     def is_liked(self):
         try:
