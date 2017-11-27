@@ -50,9 +50,19 @@ class Post(Component):
     def press_klass(self):
         self._klass_btn.click()
 
+    def is_liked(self):
+        try:
+            liked_xpath = './/div[contains(@class, "widget  __active __compact")]'
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, liked_xpath))
+            )
+            return True
+        except WebDriverException:
+            return False
+
     def is_not_liked(self):
         try:
-            liked_xpath = './/div[contains(@class, "widget __compact")]'
+            liked_xpath = './/div[contains(@class, "widget  __compact")]'
             WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, liked_xpath))
             )
