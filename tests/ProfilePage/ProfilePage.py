@@ -68,6 +68,13 @@ class ProfilePage(Page):
         )
         return Post(self.driver, element)
 
+    def remove_last_post(self):
+        element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, Post.XPATH))
+        )
+        post = Post(self.driver, element)
+        post.delete()
+
     def get_status(self):
         element = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, Status.XPATH))

@@ -18,6 +18,7 @@ class ProfileTests(Tests):
         last_post = profile_page.get_last_post()
         is_contains_image = last_post.contains_image()
         self.assertTrue(is_contains_image)
+        last_post.delete()
 
     # Проверить возможность загрузки видео на страницу (не при создании записи, а по кнопке Видео)
     def test_upload_video_by_video_btn(self):
@@ -27,3 +28,4 @@ class ProfileTests(Tests):
         last_post = profile_page.get_last_post()
         is_contains_video = last_post.contains_video()
         self.assertTrue(is_contains_video)
+        last_post.delete()
