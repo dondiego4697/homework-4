@@ -150,10 +150,6 @@ class Post(Component):
         except NoSuchElementException:
             return False
 
-    def _get_delete_btn(self):
-        delete_btn_xpath = './/a[contains(@class, "feed_close")]'
-        return self._get_element_by_xpath(delete_btn_xpath, self._elem)
-
 
 class VoteVariant(Component):
     def __init__(self, driver, element):
@@ -361,7 +357,6 @@ class ReshareInGroup(Component):
 
     def set_group(self, group_name):
         self.driver.execute_script("arguments[0].value = arguments[1]", self._group_field, group_name)
-        sleep(1)
         suggests = self._get_group_suggests()
         suggest = [
             suggest for suggest in suggests
