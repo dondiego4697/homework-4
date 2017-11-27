@@ -48,7 +48,8 @@ class Post(Component):
         return Discussion(self.driver, comment_element)
 
     def press_klass(self):
-        self._klass_btn.click()
+        self.driver.execute_script('arguments[0].click()', self._klass_btn)
+        #self._klass_btn.click()
 
     def is_liked(self):
         try:
