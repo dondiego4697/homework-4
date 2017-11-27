@@ -1,6 +1,7 @@
 from tests.PostPage.PostPage import PostPage
 from tests.main import Tests
 
+
 class CommentTests(Tests):
     def test_add_text_comment(self):
         comments = self._create_post_and_open_comments()
@@ -10,6 +11,7 @@ class CommentTests(Tests):
         comment = comments.get_first_comment()
         comment_text = comment.get_comment_text()
         self.assertEqual(comment_msg, comment_text)
+        self._return_initial_state()
 
     def test_add_empty_comment(self):
         comments = self._create_post_and_open_comments()
@@ -17,32 +19,38 @@ class CommentTests(Tests):
         comments.input_post_text(comment_msg)
         comments.comment()
         self.assertEqual(False, comments.contains_comments())
+        self._return_initial_state()
 
     def test_add_video_comment(self):
         self._make_video_comment()
         comments = self._get_last_post_comment()
         self.assertTrue(comments.contains_video())
+        self._return_initial_state()
 
     def test_add_photo_comment(self):
         self._make_photo_comment()
         comments = self._get_last_post_comment()
         self.assertTrue(comments.contains_image())
+        self._return_initial_state()
 
     def test_add_friends_comment(self):
         self._make_friends_comment()
         comments = self._get_last_post_comment()
         self.assertTrue(comments.contains_friends())
+        self._return_initial_state()
 
     def test_post_like(self):
         post = self._create_post()
         post.press_klass()
         self.assertTrue(post.is_liked())
+        self._return_initial_state()
 
     def test_post_unlike(self):
         post = self._create_post()
         post.press_klass()
         post.press_klass()
         self.assertTrue(post.is_not_liked())
+        self._return_initial_state()
 
     def test_like_comment(self):
         comments = self._create_post_and_open_comments()
@@ -53,6 +61,7 @@ class CommentTests(Tests):
         comment.klass_btn_click()
         self._mozilla_fixed_first_click(comment)
         self.assertTrue(comment.is_liked())
+        self._return_initial_state()
 
     def test_unlike_comment(self):
         comments = self._create_post_and_open_comments()
@@ -64,6 +73,7 @@ class CommentTests(Tests):
         self._mozilla_fixed_first_click(comment)
         comment.klass_btn_click()
         self.assertTrue(comment.is_not_liked())
+        self._return_initial_state()
 
     def test_delete_comment(self):
         comments = self._create_post_and_open_comments()
@@ -73,6 +83,7 @@ class CommentTests(Tests):
         confirm_popup = comments.open_delete_confirm()
         confirm_popup.delete()
         self.assertTrue(not comments.contains_comments())
+        self._return_initial_state()
 
     def _make_friends_comment(self):
         comments = self._create_post_and_open_comments()
@@ -120,3 +131,8 @@ class CommentTests(Tests):
     def _mozilla_fixed_first_click(self, comment):
         if not comment.is_liked():
             comment.klass_btn_click()
+
+    def _return_initial_state(self):
+        profile_page = self._to_profile_page()
+        post =  profile_page.get_last_post()
+        post.delete()
