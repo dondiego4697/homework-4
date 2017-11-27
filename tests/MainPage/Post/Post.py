@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from selenium.common.exceptions import WebDriverException, TimeoutException, NoSuchElementException
+from selenium.common.exceptions import WebDriverException, TimeoutException, StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -7,6 +7,22 @@ from selenium.webdriver.common.by import By
 from tests.Comments.Discussion import Discussion
 from tests.Component.Component import Component
 from tests.MainPage.Post.PostFrame import PostFrame
+
+
+def retry_times(func, times):
+    e = None
+
+    for _ in range(times):
+        try:
+            func()
+        except TimeoutException as ex:
+            e = ex
+            continue
+
+        e = None
+
+    if e is not None:
+        raise e
 
 
 class Post(Component):
@@ -32,11 +48,21 @@ class Post(Component):
         return Discussion(self.driver, comment_element)
 
     def press_klass(self):
-        self._klass_btn.click()
+        self.driver.execute_script('arguments[0].click()', self._klass_btn)
+
+    def is_liked(self):
+        try:
+            liked_xpath = './/div[contains(@class, "widget  __active __compact")]'
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, liked_xpath))
+            )
+            return True
+        except WebDriverException:
+            return False
 
     def is_not_liked(self):
         try:
-            liked_xpath = './/div[contains(@class, "widget __compact")]'
+            liked_xpath = './/div[contains(@class, "widget  __compact")]'
             WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, liked_xpath))
             )
@@ -88,7 +114,7 @@ class Post(Component):
             return True
         except WebDriverException:
             return False
-          
+
     def open_post_frame(self):
         self._clickable_post_area.click()
         post_frame_elem = WebDriverWait(self.driver, 10).until(
@@ -123,10 +149,6 @@ class Post(Component):
             return self._get_element_by_xpath(reshare_btn_xpath, self._elem)
         except NoSuchElementException:
             return False
-
-    def _get_delete_btn(self):
-        delete_btn_xpath = './/a[contains(@class, "feed_close")]'
-        return self._get_element_by_xpath(delete_btn_xpath, self._elem)
 
 
 class VoteVariant(Component):
@@ -269,7 +291,6 @@ class ReshareInMessageView(Component):
         )
 
 
-
 class ReshareWithText(Component):
     XPATH = '//div[@id="reshare"]'
 
@@ -295,10 +316,20 @@ class ReshareWithText(Component):
         if to_status == self._to_status_flag:
             return
         self._toggle_checkbox()
+
         self._to_status_flag = not self._to_status_flag
 
     def _toggle_checkbox(self):
-        self._status_checkbox.click()
+        def inner_func():
+            self._status_checkbox.click()
+            WebDriverWait(self.driver, 1).until(
+                WaitCheckedCondition(self.driver, self._status_checkbox, not self._to_status_flag)
+            )
+
+        try:
+            inner_func()
+        except TimeoutException:
+            inner_func()
 
     def _get_to_status_checkbox(self):
         return self._get_element_by_xpath('.//input[@id="reshare.toStatus"]')
@@ -327,7 +358,11 @@ class ReshareInGroup(Component):
     def set_group(self, group_name):
         self.driver.execute_script("arguments[0].value = arguments[1]", self._group_field, group_name)
         suggests = self._get_group_suggests()
-        [suggest for suggest in suggests if suggest.text == group_name][0].click()
+        suggest = [
+            suggest for suggest in suggests
+            if self.driver.execute_script('return arguments[0].innerHTML', suggest) == group_name
+        ][0]
+        self.driver.execute_script('arguments[0].click()', suggest)
 
     def submit(self):
         self._share_btn.click()
@@ -345,7 +380,7 @@ class ReshareInGroup(Component):
         return self._get_element_by_xpath('.//*[@id="reshare.submit"]', self._elem)
 
     def _get_group_suggests(self):
-        return self._get_elements_by_xpath('.//li[contains(@id, "reshare_XpostGroupSuggest")]')
+        return self._get_elements_by_xpath('.//li[contains(@id, "reshare_XpostGroupSuggest")]//div[@class="ucard-mini_cnt_i ellip"]')
 
     def _wait_self_loaded(self):
         super(ReshareInGroup, self)._wait_self_loaded()
@@ -353,3 +388,15 @@ class ReshareInGroup(Component):
             EC.invisibility_of_element_located((By.XPATH, '//div[contains(@class, "posting-form_overlay")]'))
         )
 
+
+class WaitCheckedCondition(object):
+    def __init__(self, driver, element, is_checked):
+        self.driver = driver
+        self.element = element
+        self.is_checked = is_checked
+
+    def __call__(self, driver):
+        try:
+            return self.is_checked == self.driver.execute_script('return arguments[0].checked', self.element)
+        except StaleElementReferenceException:
+            return False

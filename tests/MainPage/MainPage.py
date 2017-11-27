@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, StaleElementReferenceException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -73,3 +73,67 @@ class MainPage(Page):
         return WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, '//span[@class="pform_ac __feeling"]'))
         )
+
+    def add_recommended_friend(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//span[@class = 'button-pro __sec __small js-entity-accept']"))
+        ).click()
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//div[@class = 'entity-item_status __success lstp-t ellip']"))
+        )
+        return True
+
+    def add_recommended_group(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH,
+                                            '//div[@class="caption"]//div'
+                                            '//div[@class="hookBlock join-group-link js-groupJoinButton"]//a['
+                                            '@class="al"]'))
+        ).click()
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@class="tico c-green join-group-result"]'))
+        )
+        return True
+
+    def delete_recommended_group(self):
+        delete_clickable = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH,
+                                            '//*[@class = "recommended-group_close foh-s"]'))
+        )
+        self.driver.execute_script('arguments[0].click()', delete_clickable)
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@class = "recommended-group_stub_tx"]'))
+        )
+        return True
+
+    def delete_recommended_friend(self):
+        friend_xpath = '//*[@class = "button-pro __sec __small js-entity-accept"]'
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH,
+                                            friend_xpath))
+        )
+        friends = self.driver.find_elements_by_xpath(friend_xpath)
+
+        decline_element = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@class = "tico_img ic10 ic10_close-g js-entity-decline"]'))
+        )
+        self.driver.execute_script('arguments[0].click()', decline_element)
+
+        WebDriverWait(self.driver, 10).until(
+            WaitItemDecrease(friend_xpath, len(friends), self.driver)
+        )
+        return True
+
+
+class WaitItemDecrease(object):
+    def __init__(self, xpath, init_cnt, driver):
+        self._xpath = xpath
+        self._init_cnt = init_cnt
+        self._driver = driver
+
+    def __call__(self, *args, **kwargs):
+        try:
+            cnt = len(self._driver.find_elements_by_xpath(self._xpath))
+            return cnt != self._init_cnt - 1
+        except StaleElementReferenceException:
+            return False

@@ -24,11 +24,11 @@ class ForumComponent(Component):
         return DiscussionFrame(self.driver, discussion_frame_elem)
 
     def get_last_comment_text(self):
-        last_comment_text_xpath = '//div[contains(@class, "portlet_b")]/div/div[1]/div[contains(@class, "liItemContent")]/div/div[contains(@class, "caption")]/div'
+        last_comment_text_xpath = '//div[contains(@id, "hook_SmilizeContent_")]'
         return self._get_element_by_xpath(last_comment_text_xpath).text
 
     def delete_last_comment(self):
-        last_comment_del_xpath = '//div[contains(@class, "portlet_b")]/div/div[1]/div[contains(@class, "liCorner")]/a'
+        last_comment_del_xpath = '//i[@class="tico_img ic10 ic10_close-g"]'
         del_btn = self._get_element_by_xpath(last_comment_del_xpath)
         ActionChains(self.driver).move_to_element(del_btn).click(del_btn).perform()
         comment_delete_frame = WebDriverWait(self.driver, 10).until(

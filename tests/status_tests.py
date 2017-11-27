@@ -7,7 +7,6 @@ from tests.main import Tests
 
 class StatusTests(Tests):
     def test_post_to_status(self):
-        # добавить проверку, что этот статус уже не стоит
         post_msg = "Hello"
         self._post_string(post_msg, True)
 
@@ -60,3 +59,18 @@ class StatusTests(Tests):
 
         self.assertTrue(status.contains_music())
 
+    def test_add_recommended_friend(self):
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.add_recommended_friend())
+
+    def test_add_recommended_group(self):
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.add_recommended_group())
+
+    def test_delete_recommended_group(self):
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.delete_recommended_group())
+
+    def test_delete_recommended_friend(self):
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.delete_recommended_friend())

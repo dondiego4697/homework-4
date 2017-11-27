@@ -46,9 +46,9 @@ class Discussion(Component):
 
     def open_video_load(self):
         self._wait_self_loaded()
-        self._add_btn.click()
+        self.driver.execute_script('arguments[0].click()', self._add_btn)
         self._wait_self_loaded()
-        self._add_video_btn.click()
+        self.driver.execute_script('arguments[0].click()', self._add_video_btn)
         photo_albums_elem = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, VideoLoadView.XPATH))
         )
@@ -56,9 +56,9 @@ class Discussion(Component):
 
     def open_photo_albums(self):
         self._wait_self_loaded()
-        self._add_btn.click()
+        self.driver.execute_script('arguments[0].click()', self._add_btn)
         self._wait_self_loaded()
-        self._add_image_btn.click()
+        self.driver.execute_script('arguments[0].click()', self._add_image_btn)
         photo_albums_elem = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, PhotoAlbumsView.XPATH))
         )
@@ -66,9 +66,9 @@ class Discussion(Component):
 
     def open_friend_list(self):
         self._wait_self_loaded()
-        self._add_btn.click()
+        self.driver.execute_script('arguments[0].click()', self._add_btn)
         self._wait_self_loaded()
-        self._add_friend_btn.click()
+        self.driver.execute_script('arguments[0].click()', self._add_friend_btn)
         friends_elem = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, CommentsFriendsView.XPATH))
         )
@@ -85,7 +85,7 @@ class Discussion(Component):
 
     def contains_comments(self):
         try:
-            first_comment_xpath = '//*[@id="d-id-cmnt-local--100-rp"]/div[2]'
+            first_comment_xpath = 'd_comment_w d_comment_w__avatar __me show-on-hover'
             WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, first_comment_xpath))
             )
@@ -216,7 +216,11 @@ class Comment(Component):
         return self._get_element_by_xpath(answer_btn_xpath)
 
     def _get_klass_btn(self):
-        klass_btn_xpath = './/div[contains(@class, "d_comment_w d_comment_w__avatar __me show-on-hover")]//div[contains(@class, "klass_w")]' #'.//div[contains(@class, "klass_w")]'
+        klass_btn_xpath = '//*[contains(@id, "klass-klass-d-id-cmnt-")]'
+        return self._get_element_by_xpath(klass_btn_xpath)
+
+    def _get_unklass_btn(self):
+        klass_btn_xpath = '//div[@class="d_comment_w_center "]//a[@class="al tdn show-on-hover_a "]'
         return self._get_element_by_xpath(klass_btn_xpath)
 
     def _get_delete_btn(self):
