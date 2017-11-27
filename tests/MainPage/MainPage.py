@@ -75,13 +75,45 @@ class MainPage(Page):
         )
 
     def add_recommended_friend(self):
+        try:
+            element = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, "//span[@class = 'button-pro __sec __small js-entity-accept']"))
+            )
+            if element.text != u'Подписаться':
+                return False
+
+            element.click()
+            result = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, "//div[@class = 'entity-item_status __success lstp-t ellip']"))
+            )
+            if result.text != u'Вы подписаны':
+                return False
+            return True
+        except TimeoutException:
+            return False
+
+    def remove_first_recommended_friend(self):
         WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "//span[@class = 'button-pro __sec __small js-entity-accept']"))
+            EC.presence_of_element_located((By.XPATH, './/div[@class="entity-item_w"]//a[@class="o"]'))
         ).click()
-        WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "//div[@class = 'entity-item_status __success lstp-t ellip']"))
+
+        popup = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, 'hook_Block_FriendJoinDropdownSecondary')))
+
+        self.driver.execute_script("arguments[0].parentElement.style.cssText='opacity: 100; "
+                                   "visibility: visible;'", popup)
+
+        element = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, '//div[@data-l="t,friendMain"]/a[2]//div['
+                                                  '@class="dropdown_i_cnt"]//div[@class="dropdown_n"] '))
         )
-        return True
+        element.click()
+
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, './/span[@class="dropdown_ac button-pro __wide"]'))
+        )
 
     def add_recommended_group(self):
         WebDriverWait(self.driver, 10).until(
@@ -107,21 +139,29 @@ class MainPage(Page):
         return True
 
     def delete_recommended_friend(self):
-        friend_xpath = '//*[@class = "button-pro __sec __small js-entity-accept"]'
-        WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH,
-                                            friend_xpath))
-        )
-        friends = self.driver.find_elements_by_xpath(friend_xpath)
+        try:
+            friends_xpath = '//*[@class = "button-pro __sec __small js-entity-accept"]'
+            friends = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, friends_xpath))
+            )
 
-        decline_element = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, '//*[@class = "tico_img ic10 ic10_close-g js-entity-decline"]'))
-        )
-        self.driver.execute_script('arguments[0].click()', decline_element)
+            friend_xpath = './/*[@class = "button-pro __sec __small js-entity-accept"]'
+            friend = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, friend_xpath))
+            )
+            if friend.text != u'Добавить в друзья':
+                return False
 
-        WebDriverWait(self.driver, 10).until(
-            WaitItemDecrease(friend_xpath, len(friends), self.driver)
-        )
+            decline_element = WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, '//*[@class = "tico_img ic10 ic10_close-g js-entity-decline"]'))
+            )
+            self.driver.execute_script('arguments[0].click()', decline_element)
+
+            WebDriverWait(self.driver, 10).until(
+                WaitItemDecrease(friend_xpath, len(friends), self.driver)
+            )
+        except TimeoutException:
+            return False
         return True
 
 

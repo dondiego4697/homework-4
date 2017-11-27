@@ -170,3 +170,18 @@ class Status(Component):
             return True
         except WebDriverException:
             return False
+
+    def remove_status(self):
+        status_remove_xpath = './/div[@class="mst_ac"]//a[@class="mst_close"]'
+        status_remove_btn = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, status_remove_xpath))
+        )
+        status_remove_btn.click()
+        confirm_xpath = './/input[@class="button-pro form-actions_yes"]'
+        confirm = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, confirm_xpath))
+        )
+        confirm.click()
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, confirm_xpath))
+        )
