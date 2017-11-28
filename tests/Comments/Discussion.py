@@ -170,6 +170,9 @@ class Comment(Component):
 
     def klass_btn_click(self):
         self._wait_self_loaded()
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, '//div[@id="popLayer_mo"]'))
+        )
         self._klass_btn.click()
         self._wait_self_loaded()
 

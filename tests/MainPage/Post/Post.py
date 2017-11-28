@@ -320,6 +320,9 @@ class ReshareWithText(Component):
 
     def _toggle_checkbox(self):
         def inner_func():
+            WebDriverWait(self.driver, 10).until(
+                EC.invisibility_of_element_located((By.XPATH, '//div[@id="reshare.loading"]'))
+            )
             self._status_checkbox.click()
             WebDriverWait(self.driver, 1).until(
                 WaitCheckedCondition(self.driver, self._status_checkbox, not self._to_status_flag)
