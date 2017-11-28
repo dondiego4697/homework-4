@@ -74,7 +74,6 @@ class StatusTests(Tests):
         self._delete_last_post_from_profile()
         self._delete_last_post_from_notes()
 
-
     def test_add_recommended_friend(self):
         main_page = self._to_main_page()
         self.assertTrue(main_page.add_recommended_friend())
@@ -90,8 +89,4 @@ class StatusTests(Tests):
     def test_delete_recommended_friend(self):
         main_page = self._to_main_page()
         self.assertTrue(main_page.delete_recommended_friend())
-
-    def _cleanup_status(self):
-        post_page = self._to_post_page()
-        post_page.delete_status()
 

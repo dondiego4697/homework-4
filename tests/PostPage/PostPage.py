@@ -46,13 +46,13 @@ class PostPage(Page):
 
     def _get_post_form(self):
         element = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, PostForm.POST_FORM_XPATH))
+            EC.presence_of_element_located((By.XPATH, PostForm.XPATH))
         )
         return PostForm(self.driver, element)
 
 
 class PostForm(Component):
-    POST_FORM_XPATH = '//div[contains(@class, "mlr_cnts")]'
+    XPATH = '//div[contains(@class, "mlr_cnts")]'
 
     def __init__(self, driver, post_form_elem):
         super(PostForm, self).__init__(driver)
@@ -77,6 +77,9 @@ class PostForm(Component):
     def close(self):
         self._wait_self_loaded()
         self._close_btn.click()
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, self.XPATH))
+        )
 
     def share(self):
         self._wait_self_loaded()

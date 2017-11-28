@@ -106,3 +106,7 @@ class Tests(unittest.TestCase):
     def _delete_last_post_from_notes(self):
         post_page = self._to_post_page()
         post_page.delete_last_post()
+
+    def _cleanup_status(self):
+        post_page = self._to_post_page()
+        post_page.delete_status()
