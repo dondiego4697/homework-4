@@ -85,6 +85,9 @@ class EditProfileFrame(Component):
 
     def confirm_changes(self):
         self._save_confirm_btn.click()
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, self.XPATH))
+        )
 
     def set_gender_m(self):
         self._gender_radio_m.click()
