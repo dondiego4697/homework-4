@@ -3,16 +3,24 @@ from selenium.common.exceptions import StaleElementReferenceException
 
 
 class ReshareTests(Tests):
+    def setUp(self):
+        super(ReshareTests, self).setUp()
+        self._post_string('msg', False)
+
+    def tearDown(self):
+        self._delete_last_post_from_notes()
+        super(ReshareTests, self).tearDown()
+
     def test_share_now(self):
-        self._post_string("msg", False)
         profile_page = self._to_profile_page()
         post = profile_page.get_last_post()
         reshare_panel = post.get_reshare_panel()
         reshare_panel.share_now()
         self.assertTrue(reshare_panel.is_shared_now())
 
+        self._delete_last_post_from_notes()
+
     def test_share_in_message(self):
-        self._post_string("msg", False)
         profile_page = self._to_profile_page()
         post = profile_page.get_last_post()
         reshare_panel = post.get_reshare_panel()
@@ -22,7 +30,6 @@ class ReshareTests(Tests):
         self.assertRaises(StaleElementReferenceException, reshare_in_msg_view.visible)
 
     def test_share_with_text(self):
-        self._post_string("msg", False)
         profile_page = self._to_profile_page()
         post = profile_page.get_last_post()
         reshare_panel = post.get_reshare_panel()
@@ -37,8 +44,10 @@ class ReshareTests(Tests):
         self.assertTrue(status.contains_text())
         self.assertEqual(comment_msg, status.get_status_string())
 
+        self._cleanup_status()
+        self._delete_last_post_from_notes()
+
     def test_share_in_group(self):
-        self._post_string("msg", False)
         profile_page = self._to_profile_page()
         post = profile_page.get_last_post()
         reshare_panel = post.get_reshare_panel()

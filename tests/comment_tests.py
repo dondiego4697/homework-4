@@ -1,7 +1,14 @@
 from tests.PostPage.PostPage import PostPage
 from tests.main import Tests
 
+
 class CommentTests(Tests):
+    def tearDown(self):
+        self._cleanup_status()
+        self._delete_last_post_from_profile()
+        self._delete_last_post_from_notes()
+        super(CommentTests, self).tearDown()
+
     def test_add_text_comment(self):
         comments = self._create_post_and_open_comments()
         comment_msg = "Comment txt"
