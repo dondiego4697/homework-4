@@ -30,7 +30,8 @@ class ForumComponent(Component):
     def delete_last_comment(self):
         last_comment_del_xpath = '//i[@class="tico_img ic10 ic10_close-g"]'
         del_btn = self._get_element_by_xpath(last_comment_del_xpath)
-        ActionChains(self.driver).move_to_element(del_btn).click(del_btn).perform()
+        # ActionChains(self.driver).move_to_element(del_btn).click(del_btn).perform()
+        self.driver.execute_script('arguments[0].click()', del_btn)
         comment_delete_frame = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, CommentDeleteFrame.XPATH))
         )
@@ -53,6 +54,9 @@ class DiscussionFrame(Component):
         self._close_btn = self._get_close_btn()
 
     def write_comment(self, msg):
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of(self._comment_input)
+        )
         self._comment_input.send_keys(msg)
 
     def add_comment(self):
@@ -75,7 +79,7 @@ class DiscussionFrame(Component):
 
 
 class CommentDeleteFrame(Component):
-    XPATH = '//td'
+    XPATH = '//div[@id="mp_mm_cont"]'
 
     def __init__(self, driver, element):
         super(CommentDeleteFrame, self).__init__(driver)
@@ -84,7 +88,10 @@ class CommentDeleteFrame(Component):
 
     def confirm_delete(self):
         self._del_confirm_btn.click()
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, self.XPATH))
+        )
 
     def _get_del_confirm_btn(self):
         btn_xpath = '//input[contains(@name, "button_delete_confirm")]'
-        return self._get_element_by_xpath(btn_xpath)
+        return self._get_element_by_xpath(btn_xpath, self._element)
