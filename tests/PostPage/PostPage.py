@@ -84,9 +84,6 @@ class PostForm(Component):
     def share(self):
         self._wait_self_loaded()
         WebDriverWait(self.driver, 10).until(
-            EC.invisibility_of_element_located((By.XPATH, '//div[@class = "modal-new_cnt"]'))
-        )
-        WebDriverWait(self.driver, 10).until(
             WaitEnabled(self._share_btn)
         )
         self._share_btn.click()
