@@ -8,6 +8,8 @@ from tests.MainPage.Feeling.Feeling import FeelingsListView
 from tests.MainPage.Post.Post import Post
 from tests.Page.Page import Page
 from tests.ProfilePage.ProfilePage import ProfilePage
+from selenium.webdriver.common.action_chains import ActionChains
+import time
 
 
 class MainPage(Page):
@@ -123,6 +125,114 @@ class MainPage(Page):
             WaitItemDecrease(friend_xpath, len(friends), self.driver)
         )
         return True
+
+    def refresh_page_recommended_friend(self):
+        el = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH,
+                                            '//div[@class="caption"]//div'
+                                            '//div[@class="hookBlock join-group-link js-groupJoinButton"]'))
+        )
+
+        id = el.get_attribute("id")
+        self.driver.refresh()
+
+        refresh_el = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH,
+                                            '//div[@class="caption"]//div'
+                                            '//div[@class="hookBlock join-group-link js-groupJoinButton"]'))
+        )
+        return refresh_el.get_attribute('id') != id
+
+    def refresh_btn_recommended_friend(self):
+        el = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH,
+                                            '//div[@class="caption"]//div'
+                                            '//div[@class="hookBlock join-group-link js-groupJoinButton"]'))
+        )
+        id = el.get_attribute('id')
+        click_el = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//a[@class = "portlet_h_ac"]'))
+        )
+        self.driver.execute_script('arguments[0].click()', click_el)
+
+        WebDriverWait(self.driver, 10).until(
+            EC.staleness_of(el)
+        )
+
+        refresh_el = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH,
+                                            '//div[@class="caption"]//div'
+                                            '//div[@class="hookBlock join-group-link js-groupJoinButton"]'))
+        )
+        return refresh_el.get_attribute('id') != id
+
+    def hint_search(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, '//div[@id = "hook_Block_ContentSearchWrapper"]'))
+        )
+        click_el = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//a[@class = "h-mod filter_i"]'))
+        )
+        self.driver.execute_script('arguments[0].click()', click_el)
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, '//div[@id = "hook_Block_ContentSearchWrapper"]'))
+        )
+        return True
+
+    def hint_date_post(self):
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, '//span[@class = "feed_date"]'))
+        )
+        el = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//div[@class = "feed h-mod"]'))
+        )
+        actions = ActionChains(self.driver)
+        actions.move_to_element(el).perform()
+        WebDriverWait(self.driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, '//span[@class = "feed_date"]'))
+        )
+        return True
+
+    def exit(self):
+        menu = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//div[@class = "ucard-mini_cnt_i ellip"]'))
+        )
+        self.driver.execute_script('arguments[0].click()', menu)
+
+        exit_btn = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//a[@data-l="t,logoutCurrentUser"]'))
+        )
+        self.driver.execute_script('arguments[0].click()', exit_btn)
+
+        confirm_exit_btn = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//input[@data-l="t,confirm"]'))
+        )
+        self.driver.execute_script('arguments[0].click()', confirm_exit_btn)
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//input[@class="button-pro __wide"]'))
+        )
+        return True
+
+    def example_hash_tag(self):
+        click_el = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//a[@class = "h-mod filter_i"]'))
+        )
+        self.driver.execute_script('arguments[0].click()', click_el)
+
+        hash_tag = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//a[@class = "h-mod tag"]'))
+        )
+        value = hash_tag.get_attribute("data-query")
+        self.driver.execute_script('arguments[0].click()', hash_tag)
+
+        WebDriverWait(self.driver, 10).until(
+            EC.staleness_of(hash_tag)
+        )
+
+        input_hash_tag = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//input[@class = "it search-input_it h-mod"]'))
+        )
+        return value == input_hash_tag.get_attribute("value")
 
 
 class WaitItemDecrease(object):

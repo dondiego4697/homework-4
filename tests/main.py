@@ -15,15 +15,20 @@ from tests.TapePage.TapePage import TapePage
 
 
 class Tests(unittest.TestCase):
-    USERNAME = os.environ.get('USERNAME')
-    PASSWORD = os.environ.get('PASSWORD')
+    # USERNAME = os.environ.get('USERNAME')
+    USERNAME = u'technopark19'
+    # PASSWORD = os.environ.get('PASSWORD')
+    PASSWORD = u'qweasdzxc123'
 
     def setUp(self):
         browser = os.environ.get('BROWSER', 'CHROME')
 
         self.driver = Remote(
             command_executor='http://127.0.0.1:4444/wd/hub',
-            desired_capabilities=getattr(DesiredCapabilities, browser).copy()
+            # desired_capabilities=getattr(DesiredCapabilities, browser).copy()
+            desired_capabilities=DesiredCapabilities.CHROME
+            #  desired_capabilities={'browserName': 'firefox-55',
+            #               'version': '55'}
         )
 
         self.authentication()

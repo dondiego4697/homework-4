@@ -7,6 +7,10 @@ from tests.main import Tests
 
 class StatusTests(Tests):
 
+    def test_refresh_page_recommended_group(self):
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.refresh_page_recommended_friend())
+
     def test_post_to_status(self):
         post_msg = "Hello"
         self._post_string(post_msg, True)
@@ -67,12 +71,31 @@ class StatusTests(Tests):
 
         profile_page = self._to_profile_page()
         status = profile_page.get_status()
-
         self.assertTrue(status.contains_music())
-
         self._cleanup_status()
         self._delete_last_post_from_profile()
         self._delete_last_post_from_notes()
+        
+    def test_refresh_btn_recommended_group(self):
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.refresh_btn_recommended_friend())
+
+    def test_hint_search(self):  # проверка поялвения подсказки при клике на поиск
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.hint_search())
+
+    def test_hint_date_post(self):  # отображение даты публикации поста при наведении
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.hint_date_post())
+
+    def test_exit(self):  # выйти
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.exit())
+
+    def test_example_hash_tag(self):  #проверка того, что в поисковую строку кладется именно тот hash tag на который нажали
+        main_page = self._to_main_page()
+        self.assertTrue(main_page.example_hash_tag())
+
 
     # def test_add_recommended_friend(self):
     #     main_page = self._to_main_page()
@@ -89,4 +112,3 @@ class StatusTests(Tests):
     # def test_delete_recommended_friend(self):
     #     main_page = self._to_main_page()
     #     self.assertTrue(main_page.delete_recommended_friend())
-
