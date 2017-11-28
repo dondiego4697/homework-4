@@ -127,8 +127,3 @@ class CommentTests(Tests):
     def _mozilla_fixed_first_click(self, comment):
         if not comment.is_liked():
             comment.klass_btn_click()
-
-    # def _return_initial_state(self):
-    #     profile_page = self._to_profile_page()
-    #     post =  profile_page.get_last_post()
-    #     post.delete()
