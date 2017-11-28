@@ -32,7 +32,6 @@ class Post(Component):
         super(Post, self).__init__(driver)
         self._elem = element
         self._delete_btn = self._get_delete_btn()
-        self._clickable_post_area = self._get_clickable_post_area()
         self._comment_btn = self._get_comment_btn()
         self._klass_btn = self._get_class_btn()
         self._reshare_btn = self._get_reshare_btn()
@@ -116,7 +115,7 @@ class Post(Component):
             return False
 
     def open_post_frame(self):
-        self._clickable_post_area.click()
+        self._get_clickable_post_area().click()
         post_frame_elem = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, PostFrame.XPATH))
         )

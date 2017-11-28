@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import WebDriverException, StaleElementReferenceException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -16,6 +16,35 @@ class PostPage(Page):
     PATH = 'post'
 
     def get_post_form(self):
+        return self._get_post_form()
+
+    def delete_last_post(self):
+        self._to_all_posts()
+        close_btn = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//a[@class="al feed_close"]'))
+        )
+        self.driver.execute_script('arguments[0].click()', close_btn)
+
+    def delete_status(self):
+        self._to_all_posts()
+        remove_status_btn = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//a[@class="mst_close"]'))
+        )
+        self.driver.execute_script('arguments[0].click()', remove_status_btn)
+
+        submit_btn_xpath = '//input[@class="button-pro form-actions_yes"]'
+        submit_btn = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, submit_btn_xpath))
+        )
+        submit_btn.click()
+        WebDriverWait(self.driver, 10).until(
+            EC.invisibility_of_element_located((By.XPATH, submit_btn_xpath))
+        )
+
+    def _to_all_posts(self):
+        self._get_post_form().close()
+
+    def _get_post_form(self):
         element = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, PostForm.POST_FORM_XPATH))
         )
@@ -54,7 +83,10 @@ class PostForm(Component):
         WebDriverWait(self.driver, 10).until(
             EC.invisibility_of_element_located((By.XPATH, '//div[@class = "modal-new_cnt"]'))
         )
-        self.driver.execute_script('arguments[0].click()', self._share_btn)
+        WebDriverWait(self.driver, 10).until(
+            WaitEnabled(self._share_btn)
+        )
+        self._share_btn.click()
         element_to_disappear_xpath = '//div[contains(@class, "media-layer__topic __active __create")]'
 
         try:
@@ -151,5 +183,16 @@ class PostForm(Component):
         WebDriverWait(self.driver, 10).until(
             EC.invisibility_of_element_located((By.XPATH, overlay_xpath))
         )
+
+
+class WaitEnabled(object):
+    def __init__(self, element):
+        self.element = element
+
+    def __call__(self, driver):
+        try:
+            return '__disabled' not in self.element.get_attribute('class').split(' ')
+        except StaleElementReferenceException:
+            return False
 
 

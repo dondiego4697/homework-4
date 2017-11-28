@@ -62,17 +62,20 @@ class Tests(unittest.TestCase):
         about_page.open()
         return about_page
 
-    def _post_string(self, msg, to_status):
+    def _to_post_page(self):
         post_page = PostPage(self.driver)
         post_page.open()
+        return post_page
+
+    def _post_string(self, msg, to_status):
+        post_page = self._to_post_page()
         post_form = post_page.get_post_form()
         post_form.input_post_text(msg)
         post_form.set_to_status(to_status)
         post_form.share()
 
     def _post_img_to_status(self):
-        post_page = PostPage(self.driver)
-        post_page.open()
+        post_page = self._to_post_page()
         post_form = post_page.get_post_form()
         photo_albums = post_form.open_photo_albums()
         album = photo_albums.open_first_album()
@@ -81,18 +84,25 @@ class Tests(unittest.TestCase):
         post_form.share()
 
     def _post_video_to_status(self):
-        post_page = PostPage(self.driver)
-        post_page.open()
+        post_page = self._to_post_page()
         post_form = post_page.get_post_form()
         video_load = post_form.open_video_load()
         video_load.attach_first_video()
         post_form.share()
 
     def _post_music_to_status(self):
-        post_page = PostPage(self.driver)
-        post_page.open()
+        post_page = self._to_post_page()
         post_form = post_page.get_post_form()
         music_load = post_form.open_music_load()
         music_load.select_first_music()
         music_load.submit()
         post_form.share()
+
+    def _delete_last_post_from_profile(self):
+        profile_page = self._to_profile_page()
+        last_post = profile_page.get_last_post()
+        last_post.delete()
+
+    def _delete_last_post_from_notes(self):
+        post_page = self._to_post_page()
+        post_page.delete_last_post()

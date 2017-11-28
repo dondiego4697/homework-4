@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import WebDriverException, TimeoutException
 
 from tests.PostPage.PostPage import PostPage
 from tests.main import Tests
 
 
 class StatusTests(Tests):
+
     def test_post_to_status(self):
         post_msg = "Hello"
         self._post_string(post_msg, True)
@@ -13,20 +14,23 @@ class StatusTests(Tests):
         profile_page = self._to_profile_page()
         status = profile_page.get_status()
         status_string = status.get_status_string()
-        self.assertEqual(post_msg, status_string)
 
+        self.assertEqual(post_msg, status_string)
         self.assertFalse(status.contains_image())
+
+        self._cleanup_status()
+        self._delete_last_post_from_profile()
+        self._delete_last_post_from_notes()
 
     def test_post_not_to_status(self):
         post_msg = "Not to status"
         self._post_string(post_msg, False)
 
         profile_page = self._to_profile_page()
-        status = profile_page.get_status()
-        if not status.contains_text():
-            return
-        status_string = status.get_status_string()
-        self.assertNotEqual(post_msg, status_string)
+        self.assertRaises(TimeoutException, profile_page.get_status)
+
+        self._delete_last_post_from_profile()
+        self._delete_last_post_from_notes()
 
     def test_post_empty_string(self):
         post_msg = ""
@@ -37,12 +41,15 @@ class StatusTests(Tests):
         self.assertRaises(WebDriverException, post_form.share)
 
     def test_add_photo(self):
-        self._post_string("msg", True)
         self._post_img_to_status()
 
         profile_page = self._to_profile_page()
         status = profile_page.get_status()
         self.assertTrue(status.contains_image())
+
+        self._cleanup_status()
+        self._delete_last_post_from_profile()
+        self._delete_last_post_from_notes()
 
     def test_add_video(self):
         self._post_video_to_status()
@@ -51,6 +58,10 @@ class StatusTests(Tests):
         status = profile_page.get_status()
         self.assertTrue(status.contains_video())
 
+        self._cleanup_status()
+        self._delete_last_post_from_profile()
+        self._delete_last_post_from_notes()
+
     def test_add_music(self):
         self._post_music_to_status()
 
@@ -58,6 +69,11 @@ class StatusTests(Tests):
         status = profile_page.get_status()
 
         self.assertTrue(status.contains_music())
+
+        self._cleanup_status()
+        self._delete_last_post_from_profile()
+        self._delete_last_post_from_notes()
+
 
     def test_add_recommended_friend(self):
         main_page = self._to_main_page()
@@ -74,3 +90,8 @@ class StatusTests(Tests):
     def test_delete_recommended_friend(self):
         main_page = self._to_main_page()
         self.assertTrue(main_page.delete_recommended_friend())
+
+    def _cleanup_status(self):
+        post_page = self._to_post_page()
+        post_page.delete_status()
+
