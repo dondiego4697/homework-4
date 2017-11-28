@@ -93,7 +93,7 @@ class PostForm(Component):
         element_to_disappear_xpath = '//div[contains(@class, "media-layer__topic __active __create")]'
 
         try:
-            WebDriverWait(self.driver, 10).until(
+            WebDriverWait(self.driver, 1).until(
                 EC.invisibility_of_element_located((By.XPATH, element_to_disappear_xpath))
             )
         finally:
