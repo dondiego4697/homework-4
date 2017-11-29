@@ -104,7 +104,7 @@ class EditProfileFrame(Component):
         return self._get_element_by_xpath(btn_xpath)
 
     def _get_cancel_btn(self):
-        btn_cancel_xpath = '//a[contains(@id, "button_cancelPopLayerEditUserProfileNew")]'
+        btn_cancel_xpath = '//a[@id = "nohook_modal_close"]'
         return self._get_element_by_xpath(btn_cancel_xpath)
 
     def _get_bday_selector(self):
