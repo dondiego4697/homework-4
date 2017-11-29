@@ -33,7 +33,7 @@ class AboutInfoComponent(Component):
         return self._get_element_by_xpath(name_xpath).text.split()[0]
 
     def get_user_birth_date(self):
-        date_xpath = '//div[contains(@data-type, "age")]'
+        date_xpath = '//div[@data-type="AGE"]'
         return self._get_element_by_xpath(date_xpath).text.split()[0]
 
     def get_gender_string(self):
@@ -41,7 +41,7 @@ class AboutInfoComponent(Component):
         return self._get_element_by_xpath(gender_xpath).text
 
     def get_birth_city(self):
-        city_xpath = '//div[contains(@data-type, "text")]'
+        city_xpath = '//div[@data-type="TEXT"]'
         return self._get_element_by_xpath(city_xpath).text
 
     def _get_link_to_edit_profile(self):
