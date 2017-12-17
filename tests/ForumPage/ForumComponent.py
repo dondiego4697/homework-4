@@ -30,7 +30,6 @@ class ForumComponent(Component):
     def delete_last_comment(self):
         last_comment_del_xpath = '//i[@class="tico_img ic10 ic10_close-g"]'
         del_btn = self._get_element_by_xpath(last_comment_del_xpath)
-        # ActionChains(self.driver).move_to_element(del_btn).click(del_btn).perform()
         self.driver.execute_script('arguments[0].click()', del_btn)
         comment_delete_frame = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, CommentDeleteFrame.XPATH))

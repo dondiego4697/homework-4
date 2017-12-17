@@ -138,7 +138,6 @@ class FavouriteMusicSection(Component):
         actions.click(self._music_input_field)
         actions.send_keys(text)
         actions.perform()
-        # self._music_input_field.send_keys(text)
         add_btn_xpath = '//input[contains(@name, "btnSubmitMusic")]'
         add_btn = WebDriverWait(self.driver, 10).until(
             EC.visibility_of_element_located((By.XPATH, add_btn_xpath))

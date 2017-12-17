@@ -3,7 +3,8 @@
 import sys
 import unittest
 
-from tests.poll_tests import PollTests
+from tests.poll_tests_positive import PollTestsPositive
+from tests.poll_tests_negative import PollTestsNegative
 from tests.post_manipulation_tests import PostManipulationTests
 from tests.profile_tests import ProfileTests
 from tests.reshare_tests import ReshareTests
@@ -20,10 +21,15 @@ if __name__ == '__main__':
     ))
     result |= unittest.TextTestRunner().run(status_suite).wasSuccessful()
 
-    poll_suite = unittest.TestSuite((
-        unittest.makeSuite(PollTests),
+    poll_suite_pos = unittest.TestSuite((
+        unittest.makeSuite(PollTestsPositive),
     ))
-    result |= unittest.TextTestRunner().run(poll_suite).wasSuccessful()
+    result |= unittest.TextTestRunner().run(poll_suite_pos).wasSuccessful()
+
+    poll_suite_neg = unittest.TestSuite((
+        unittest.makeSuite(PollTestsNegative),
+    ))
+    result |= unittest.TextTestRunner().run(poll_suite_neg).wasSuccessful()
 
     comment_suite = unittest.TestSuite((
         unittest.makeSuite(CommentTests)

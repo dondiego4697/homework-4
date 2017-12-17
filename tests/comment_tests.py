@@ -23,7 +23,7 @@ class CommentTests(Tests):
         comment_msg = ""
         comments.input_post_text(comment_msg)
         comments.comment()
-        self.assertEqual(False, comments.contains_comments())
+        self.assertFalse(comments.contains_comments())
 
     def test_add_video_comment(self):
         self._make_video_comment()
@@ -79,7 +79,7 @@ class CommentTests(Tests):
         comments.comment()
         confirm_popup = comments.open_delete_confirm()
         confirm_popup.delete()
-        self.assertTrue(not comments.contains_comments())
+        self.assertFalse(comments.contains_comments())
 
     def _make_friends_comment(self):
         comments = self._create_post_and_open_comments()

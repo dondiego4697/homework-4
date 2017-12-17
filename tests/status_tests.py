@@ -95,20 +95,3 @@ class StatusTests(Tests):
     def test_example_hash_tag(self):  #проверка того, что в поисковую строку кладется именно тот hash tag на который нажали
         main_page = self._to_main_page()
         self.assertTrue(main_page.example_hash_tag())
-
-
-    # def test_add_recommended_friend(self):
-    #     main_page = self._to_main_page()
-    #     self.assertTrue(main_page.add_recommended_friend())
-    #
-    # def test_add_recommended_group(self):
-    #     main_page = self._to_main_page()
-    #     self.assertTrue(main_page.add_recommended_group())
-    #
-    # def test_delete_recommended_group(self):
-    #     main_page = self._to_main_page()
-    #     self.assertTrue(main_page.delete_recommended_group())
-    #
-    # def test_delete_recommended_friend(self):
-    #     main_page = self._to_main_page()
-    #     self.assertTrue(main_page.delete_recommended_friend())

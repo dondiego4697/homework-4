@@ -27,6 +27,7 @@ class ReshareTests(Tests):
         reshare_in_msg_view = reshare_panel.share_in_message()
         reshare_in_msg_view.select_friend(0)
         reshare_in_msg_view.submit()
+        # Показателем того, что сообщение поделилось, вьюшка с поделяшкой закрывается
         self.assertRaises(StaleElementReferenceException, reshare_in_msg_view.visible)
 
     def test_share_with_text(self):

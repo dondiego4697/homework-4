@@ -9,22 +9,6 @@ from tests.Component.Component import Component
 from tests.MainPage.Post.PostFrame import PostFrame
 
 
-def retry_times(func, times):
-    e = None
-
-    for _ in range(times):
-        try:
-            func()
-        except TimeoutException as ex:
-            e = ex
-            continue
-
-        e = None
-
-    if e is not None:
-        raise e
-
-
 class Post(Component):
     XPATH = '//div[contains(@class, "feed-w")]'
 

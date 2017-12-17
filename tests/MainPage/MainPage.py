@@ -9,7 +9,6 @@ from tests.MainPage.Post.Post import Post
 from tests.Page.Page import Page
 from tests.ProfilePage.ProfilePage import ProfilePage
 from selenium.webdriver.common.action_chains import ActionChains
-import time
 
 
 class MainPage(Page):
